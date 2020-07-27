@@ -23,24 +23,22 @@ short = tk.IntVar()
 # checkbox
 short_check = tk.Checkbutton(window, text = "Short (if checked,\nshort board will be generated)", \
     variable=short)
-short_check.grid(row = 1, column = 0)
+short_check.grid(row = 0, column = 0)
 
 # quit button
 quitbutton = tk.Button(window, text = "Quit", command=window.destroy)
-quitbutton.grid(row = 4, column = 0, pady=10)
+quitbutton.grid(row = 3, column = 0, pady=10)
 
-# scroll bar
-scrollb = tk.Scrollbar()
-# scrollb.pack(expand=True, fill=tk.BOTH,side=tk.RIGHT)
-scrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 5)
+# vertical scroll bar
+vscrollb = tk.Scrollbar(window)
+vscrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 5)
 
 # text
-text = tk.Text(window, state=tk.DISABLED, height=7, width=70)
-text['yscrollcommand'] = scrollb.set
-# text.pack(expand=True, fill=tk.BOTH, side=tk.RIGHT)
+text = tk.Text(window, state=tk.DISABLED, height=10, width=70)
+text['yscrollcommand'] = vscrollb.set
 text.grid(row = 0, column = 1, sticky='nsew', rowspan = 5)
 
-scrollb.config(command = text.yview)
+vscrollb.config(command = text.yview)
 window.grid_columnconfigure(1, weight=1)
 window.grid_rowconfigure(0, weight=1)
 
@@ -202,6 +200,7 @@ def main():
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
+            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
@@ -336,6 +335,7 @@ def main():
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
+            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
@@ -351,7 +351,7 @@ def main():
 # main button
 main_button = tk.Button(window, text = "Click to generate missions!", \
     command=main)
-main_button.grid(row = 2, column = 0)
+main_button.grid(row = 1, column = 0)
 
 window.title("BK Missions Generator")
 window.minsize(500,120)
