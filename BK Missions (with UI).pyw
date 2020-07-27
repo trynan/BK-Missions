@@ -34,7 +34,7 @@ vscrollb = tk.Scrollbar(window)
 vscrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 5)
 
 # text
-text = tk.Text(window, state=tk.DISABLED, height=10, width=70)
+text = tk.Text(window, state=tk.DISABLED, height=13, width=70)
 text['yscrollcommand'] = vscrollb.set
 text.grid(row = 0, column = 1, sticky='nsew', rowspan = 5)
 
@@ -201,6 +201,7 @@ def main():
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
             text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
+            text.insert(tk.END, "[[BK Missions - LONG]]\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
@@ -336,6 +337,7 @@ def main():
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
             text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
+            text.insert(tk.END, "[[BK Missions - SHORT]]\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
@@ -355,5 +357,5 @@ main_button.grid(row = 1, column = 0)
 
 window.title("BK Missions Generator")
 window.minsize(500,120)
-window.maxsize(1000,200)
+window.maxsize(1000,300)
 window.mainloop()
