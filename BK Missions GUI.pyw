@@ -354,6 +354,6 @@ main_button = tk.Button(window, text = "Click to generate missions!", \
 main_button.grid(row = 2, column = 0)
 
 window.title("BK Missions Generator")
-window.minsize(200,100)
-window.maxsize(1000,1000)
+window.minsize(500,120)
+window.maxsize(1000,200)
 window.mainloop()
