@@ -19,11 +19,17 @@ class Mission:
 
 window = tk.Tk()
 short = tk.IntVar()
+codesvar = tk.IntVar()
 
-# checkbox
-short_check = tk.Checkbutton(window, text = "Short (if checked,\nshort board will be generated)", \
+# short checkbox
+short_check = tk.Checkbutton(window, text = "Short (if checked, short\nboard will be generated)", \
     variable=short)
 short_check.grid(row = 0, column = 0)
+
+# codes checkbox
+codes_check = tk.Checkbutton(window, text = "Show codes after each goal", \
+    variable=codesvar)
+codes_check.grid(row = 1, column = 0)
 
 # quit button
 quitbutton = tk.Button(window, text = "Quit", command=window.destroy)
@@ -206,8 +212,9 @@ def main():
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
                 text.insert(tk.END, g.name)
-                text.insert(tk.END, ' -- ')
-                text.insert(tk.END, ', '.join(g.codes))
+                if codesvar.get() == 1:
+                    text.insert(tk.END, ' -- ')
+                    text.insert(tk.END, ', '.join(g.codes))
                 text.insert(tk.END, '\n')
             text.config(state=tk.DISABLED)
 
@@ -342,8 +349,9 @@ def main():
                 text.insert(tk.END, g.num)
                 text.insert(tk.END, ': ')
                 text.insert(tk.END, g.name)
-                text.insert(tk.END, ' -- ')
-                text.insert(tk.END, ', '.join(g.codes))
+                if codesvar.get() == 1:
+                    text.insert(tk.END, ' -- ')
+                    text.insert(tk.END, ', '.join(g.codes))
                 text.insert(tk.END, '\n')
             text.config(state=tk.DISABLED)
 
@@ -353,7 +361,7 @@ def main():
 # main button
 main_button = tk.Button(window, text = "Click to generate missions!", \
     command=main)
-main_button.grid(row = 1, column = 0)
+main_button.grid(row = 2, column = 0)
 
 window.title("BK Missions Generator")
 window.minsize(500,120)
