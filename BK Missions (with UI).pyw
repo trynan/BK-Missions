@@ -206,7 +206,7 @@ def main():
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
-            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
+            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nUI created by Trynan\n\n")
             text.insert(tk.END, "[[BK Missions - LONG]]\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
@@ -343,7 +343,7 @@ def main():
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
             text.delete("1.0",tk.END)
-            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nGUI created by Trynan\n\n")
+            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nUI created by Trynan\n\n")
             text.insert(tk.END, "[[BK Missions - SHORT]]\n\n")
             for g in goals_sort:
                 text.insert(tk.END, g.num)
