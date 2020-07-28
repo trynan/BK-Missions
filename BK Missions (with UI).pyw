@@ -391,7 +391,7 @@ vscrollb.config(\
 window.grid_columnconfigure(1, weight=1)
 window.grid_rowconfigure(0, weight=1)
 
-window.title("BK Missions Generator")
+window.title("BK Missions Generator v1.2")
 window.minsize(500,120)
 window.maxsize(1000,300)
 window.mainloop()
