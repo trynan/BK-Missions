@@ -1,6 +1,6 @@
 # BK Missions
 # Originally written by Trynan and Wedarobi
-# GUI version by Trynan
+# UI version by Trynan
 # Maintained by Trynan
 
 import tkinter as tk
@@ -192,6 +192,7 @@ def main():
                         codes3.append(c)
                     else:
                         codes2.append(c)
+                goals.append(mission)
             # ---------------------------------------------------
             elif i == 0:
                 # do main objective before all else
@@ -201,7 +202,7 @@ def main():
                 for c in mission.codes:
                     codes1.append(c)
             
-            goals.append(mission)
+                goals.append(mission)
             goals_sort = sorted(goals, key=attrgetter('num'))
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
@@ -298,9 +299,7 @@ def main():
         ]
         ############################## SHORT MISSIONS GENERATION ##############################
         goals = []
-        codes1 = []
-        codes2 = []
-        codes3 = []
+        codes = []
         i_list = []
 
         for i in range(len(missions)):
@@ -318,17 +317,19 @@ def main():
                     mission = missions[rand_i][rn]
                     exists = False
                     for c in mission.codes:
-                        if c in codes1 or c in codes3:
+                        if c in codes:
                             exists = True
                             break
                     if exists: continue
                     done = True
 
+                # comment this code below to enable/disable repeating codes for early/late game
+                # if it's commented out that means codes can repeat for 2/3 (as long as they don't share 1's goal)
+                # vvvvvvvvvvvvvvvvvvvvvvv
                 for c in mission.codes:
-                    if c in codes2:
-                        codes3.append(c)
-                    else:
-                        codes2.append(c)
+                    codes.append(c)
+                # ^^^^^^^^^^^^^^^^^^^^^^^
+                goals.append(mission)
             # ---------------------------------------------------
             elif i == 0:
                 # do main objective before all else
@@ -336,9 +337,9 @@ def main():
                 rn = random.randint(0, count-1)
                 mission = missions[i][rn]
                 for c in mission.codes:
-                    codes1.append(c)
+                    codes.append(c)
             
-            goals.append(mission)
+                goals.append(mission)
             goals_sort = sorted(goals, key=attrgetter('num'))
             # write the sorted goals to the text box widget
             text.config(state=tk.NORMAL)
