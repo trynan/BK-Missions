@@ -13,26 +13,27 @@ class Mission:
         self.num = num
         self.name = name
 
-##################################################################################################################################
-###################################################### tkinter stuff (GUI) #######################################################
-##################################################################################################################################
-
+# ------------------------------------------------------
+# ----------------- INITIALIZE BUTTONS -----------------
+# ------------------------------------------------------
 window = tk.Tk()
 short = tk.IntVar()
 codesvar = tk.IntVar()
 
 # short checkbox
-short_check = tk.Checkbutton(window, text = "Short (if checked, short\nboard will be generated)", \
-    variable=short)
+short_check = tk.Checkbutton(window)
 short_check.grid(row = 0, column = 0)
 
 # codes checkbox
-codes_check = tk.Checkbutton(window, text = "Show codes after each goal", \
-    variable=codesvar)
+codes_check = tk.Checkbutton(window)
 codes_check.grid(row = 1, column = 0)
 
+# main button
+main_button = tk.Button(window)
+main_button.grid(row = 2, column = 0)
+
 # quit button
-quitbutton = tk.Button(window, text = "Quit", command=window.destroy)
+quitbutton = tk.Button(window)
 quitbutton.grid(row = 3, column = 0, pady=10)
 
 # vertical scroll bar
@@ -40,22 +41,45 @@ vscrollb = tk.Scrollbar(window)
 vscrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 5)
 
 # text
-text = tk.Text(window, state=tk.DISABLED, height=13, width=70)
+text = tk.Text(window)
 text['yscrollcommand'] = vscrollb.set
 text.grid(row = 0, column = 1, sticky='nsew', rowspan = 5)
 
-vscrollb.config(command = text.yview)
-window.grid_columnconfigure(1, weight=1)
-window.grid_rowconfigure(0, weight=1)
 
-##################################################################################################################################
-##################################################################################################################################
-##################################################################################################################################
+# ------------------------------------------------------
+# ----------------- HELPER FUNCTION(s) -----------------
+# ------------------------------------------------------
+def write_text(g, c, s):
+    """ g is a list of missions (objects), sorted. c is codesvar (int). 
+        s is bool for short. true means short. 
+        function writes text to text widget called text """
 
+    text.config(state = tk.NORMAL)
+    text.delete("1.0", tk.END)
+    text.insert(tk.END, "Initially written by Trynan and Wedarobi\nUI created by Trynan\n\n")
+    if not s:
+        text.insert(tk.END, "[[BK Missions - LONG]]\n\n")
+    else: 
+        text.insert(tk.END, "[[BK Missions - SHORT]]\n\n")
+    for x in g:
+        text.insert(tk.END, x.num)
+        text.insert(tk.END, ': ')
+        text.insert(tk.END, x.name)
+        if c == 1:
+            text.insert(tk.END, ' -- ')
+            text.insert(tk.END, ', '.join(x.codes))
+        text.insert(tk.END, '\n')
+    text.config(state = tk.NORMAL)
 
+# ------------------------------------------------------
+# ----------------- MAIN FUNCTION HERE -----------------
+# ------------------------------------------------------
 def main():
+    """ main function, gets a set of missions randomly
+        based on certain restricitons """
     global short
-    if short.get() == 0: # full missions (long)
+    if short.get() == 0:
+# ----------------- LONG MISSION LIST -----------------
         missions = [
             [ # MAIN_OBJECTIVE
                 Mission(["N"],              "1. Main Objective", "Open 765 note door"),
@@ -159,7 +183,8 @@ def main():
                 # Mission([],      "5. Late Game", ""),
             ]
         ]
-        ############################## LONG MISSIONS GENERATION ##############################
+
+# ----------------- LONG MISSION GENERATION -----------------
         goals = []
         codes1 = []
         codes2 = []
@@ -167,14 +192,24 @@ def main():
         i_list = []
 
         for i in range(len(missions)):
-            if i != 0:
+            if i == 0:
+                # do main objective before all else
+                count = len(missions[i])
+                rn = random.randint(0, count-1)
+                mission = missions[i][rn]
+                for c in mission.codes:
+                    codes1.append(c)
+                goals.append(mission)
+
+            elif i != 0:
                 # after i = 0 do them randomly
                 rand_i = random.randint(1,len(missions)-1)
                 while rand_i in i_list:
                     rand_i = random.randint(1,len(missions)-1)
                 i_list.append(rand_i)
-
                 count = len(missions[rand_i])
+                
+                # get random mission
                 done = False
                 while not done:
                     rn = random.randint(0, count-1)
@@ -186,42 +221,21 @@ def main():
                             break
                     if exists: continue
                     done = True
-
+                # add mission's codes to list of codes
                 for c in mission.codes:
                     if c in codes2:
                         codes3.append(c)
                     else:
                         codes2.append(c)
-                goals.append(mission)
-            # ---------------------------------------------------
-            elif i == 0:
-                # do main objective before all else
-                count = len(missions[i])
-                rn = random.randint(0, count-1)
-                mission = missions[i][rn]
-                for c in mission.codes:
-                    codes1.append(c)
-            
+                
                 goals.append(mission)
             goals_sort = sorted(goals, key=attrgetter('num'))
             # write the sorted goals to the text box widget
-            text.config(state=tk.NORMAL)
-            text.delete("1.0",tk.END)
-            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nUI created by Trynan\n\n")
-            text.insert(tk.END, "[[BK Missions - LONG]]\n\n")
-            for g in goals_sort:
-                text.insert(tk.END, g.num)
-                text.insert(tk.END, ': ')
-                text.insert(tk.END, g.name)
-                if codesvar.get() == 1:
-                    text.insert(tk.END, ' -- ')
-                    text.insert(tk.END, ', '.join(g.codes))
-                text.insert(tk.END, '\n')
-            text.config(state=tk.DISABLED)
+            write_text(goals_sort, codesvar.get(), False)
 
-    #######################################################################################
 
-    elif short.get() == 1: # short missions
+    elif short.get() == 1:
+# ----------------- SHORT MISSION LIST -----------------
         missions = [
             [ # MAIN_OBJECTIVE
                 Mission(["H"],              "1. Main Objective", "18 HCs"),
@@ -297,20 +311,31 @@ def main():
                 Mission(["J", "T", "R"],    "3. Late Game", "Collect 10 jiggies as the bee"),
             ]
         ]
-        ############################## SHORT MISSIONS GENERATION ##############################
+
+# ----------------- SHORT MISSION GENERATION -----------------
         goals = []
         codes = []
         i_list = []
 
         for i in range(len(missions)):
-            if i != 0:
+            if i == 0:
+                # do main objective before all else
+                count = len(missions[i])
+                rn = random.randint(0, count-1)
+                mission = missions[i][rn]
+                for c in mission.codes:
+                    codes.append(c)
+                goals.append(mission)
+
+            elif i != 0:
                 # after i = 0 do them randomly
                 rand_i = random.randint(1,len(missions)-1)
                 while rand_i in i_list:
                     rand_i = random.randint(1,len(missions)-1)
                 i_list.append(rand_i)
-
                 count = len(missions[rand_i])
+
+                # get random mission
                 done = False
                 while not done:
                     rn = random.randint(0, count-1)
@@ -329,40 +354,42 @@ def main():
                 for c in mission.codes:
                     codes.append(c)
                 # ^^^^^^^^^^^^^^^^^^^^^^^
-                goals.append(mission)
-            # ---------------------------------------------------
-            elif i == 0:
-                # do main objective before all else
-                count = len(missions[i])
-                rn = random.randint(0, count-1)
-                mission = missions[i][rn]
-                for c in mission.codes:
-                    codes.append(c)
             
                 goals.append(mission)
             goals_sort = sorted(goals, key=attrgetter('num'))
             # write the sorted goals to the text box widget
-            text.config(state=tk.NORMAL)
-            text.delete("1.0",tk.END)
-            text.insert(tk.END, "Initially written by Trynan and Wedarobi\nUI created by Trynan\n\n")
-            text.insert(tk.END, "[[BK Missions - SHORT]]\n\n")
-            for g in goals_sort:
-                text.insert(tk.END, g.num)
-                text.insert(tk.END, ': ')
-                text.insert(tk.END, g.name)
-                if codesvar.get() == 1:
-                    text.insert(tk.END, ' -- ')
-                    text.insert(tk.END, ', '.join(g.codes))
-                text.insert(tk.END, '\n')
-            text.config(state=tk.DISABLED)
-
-    #######################################################################################
+            write_text(goals_sort, codesvar.get(), True)
 
 
-# main button
-main_button = tk.Button(window, text = "Click to generate missions!", \
-    command=main)
-main_button.grid(row = 2, column = 0)
+# --------------------------------------------------
+# ----------------- CONFIG BUTTONS -----------------
+# --------------------------------------------------
+short_check.config(\
+    text = "Short (if checked, short\nboard will be generated)", \
+    variable = short)
+
+codes_check.config(\
+    text = "Show codes after each goal", \
+    variable = codesvar)
+
+main_button.config(\
+    text = "Click to generate missions!", \
+    command = main)
+
+quitbutton.config(\
+    text = "Quit", \
+    command = window.destroy)
+
+text.config(\
+    state = tk.DISABLED, \
+    height = 13, \
+    width = 70)
+
+vscrollb.config(\
+    command = text.yview)
+
+window.grid_columnconfigure(1, weight=1)
+window.grid_rowconfigure(0, weight=1)
 
 window.title("BK Missions Generator")
 window.minsize(500,120)
