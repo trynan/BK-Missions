@@ -13,6 +13,8 @@ class Mission:
         self.num = num
         self.name = name
 
+show_missions_var = False
+
 # ------------------------------------------------------
 # ----------------- INITIALIZE BUTTONS -----------------
 # ------------------------------------------------------
@@ -22,33 +24,37 @@ codesvar = tk.IntVar()
 
 # short checkbox
 short_check = tk.Checkbutton(window)
-short_check.grid(row = 0, column = 0)
+short_check.grid(row = 1, column = 0, pady=10)
 
 # codes checkbox
 codes_check = tk.Checkbutton(window)
-codes_check.grid(row = 1, column = 0)
+codes_check.grid(row = 2, column = 0, pady=10)
 
 # main button
 main_button = tk.Button(window)
-main_button.grid(row = 2, column = 0)
+main_button.grid(row = 3, column = 0, pady=10)
+
+# show missions button
+missions_button = tk.Button(window)
+missions_button.grid(row = 4, column = 0, pady=10)
 
 # quit button
-quitbutton = tk.Button(window)
-quitbutton.grid(row = 3, column = 0, pady=10)
+quit_button = tk.Button(window)
+quit_button.grid(row = 5, column = 0, pady=10)
 
 # vertical scroll bar
 vscrollb = tk.Scrollbar(window)
-vscrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 5)
+vscrollb.grid(row = 0, column = 2, sticky='nsew', rowspan = 6)
 
 # text
 text = tk.Text(window)
 text['yscrollcommand'] = vscrollb.set
-text.grid(row = 0, column = 1, sticky='nsew', rowspan = 5)
+text.grid(row = 0, column = 1, sticky='nsew', rowspan = 6)
 
 
-# ------------------------------------------------------
-# ----------------- HELPER FUNCTION(s) -----------------
-# ------------------------------------------------------
+# -------------------------------------------------------
+# ----------------- WRITE TEXT FUNCTION -----------------
+# -------------------------------------------------------
 def write_text(g, c, s):
     """ g is a list of missions (objects), sorted. c is codesvar (int). 
         s is bool for short. true means short. 
@@ -69,7 +75,7 @@ def write_text(g, c, s):
             text.insert(tk.END, ' -- ')
             text.insert(tk.END, ', '.join(x.codes))
         text.insert(tk.END, '\n')
-    text.config(state = tk.NORMAL)
+    text.config(state = tk.DISABLED)
 
 # ------------------------------------------------------
 # ----------------- MAIN FUNCTION HERE -----------------
@@ -78,6 +84,8 @@ def main():
     """ main function, gets a set of missions randomly
         based on certain restricitons """
     global short
+    global show_missions_var
+    global codesvar
     if short.get() == 0:
 # ----------------- LONG MISSION LIST -----------------
         missions = [
@@ -89,7 +97,7 @@ def main():
                 Mission(["T"],              "1. Main Objective", "All 116 tokens"),
                 Mission(["J"],              "1. Main Objective", "Open all 9 worlds"),
                 Mission(["N", "R"],         "1. Main Objective", "All notes"),
-                Mission(["J", "R"],         "1. Main Objective", "{} jiggies".format(random.randint(80,90))),
+                Mission(["J", "R"],         "1. Main Objective", "{} jiggies [r]".format(random.randint(80,90))),
                 Mission(["N", "J", "R"],    "1. Main Objective", "Open DoG & defeat Grunty"),
                 Mission(["J"],              "1. Main Objective", "Humanitarian: Chimpy, Blubber, raise Clanker/fix teeth, Tanktup, presents, Gobi's rock, Trunker, Snorkel, Nabnut, Eyrie, Gnawty, Tooty"),
                 Mission(["N", "R"],         "1. Main Objective", "Open All 12 Note Doors and Defeat Grunty"),
@@ -97,7 +105,7 @@ def main():
                 # Mission([],      "1. Main Objective", ""),
             ],
             [ # SIDE_QUEST
-                Mission(["H", "A"],         "2. Side Quest", "{} HCs".format(random.randint(14,18))),
+                Mission(["H", "A"],         "2. Side Quest", "{} HCs [r]".format(random.randint(14,18))),
                 Mission(["T"],              "2. Side Quest", "All 5 transformations"),
                 Mission([],                 "2. Side Quest", "All 10 Brentilda visits"),
                 Mission(["O"],              "2. Side Quest", "All 9 orange Jinjos"),
@@ -106,8 +114,8 @@ def main():
                 Mission(["O"],              "2. Side Quest", "All 9 pink Jinjos"),
                 Mission(["O"],              "2. Side Quest", "All 9 yellow Jinjos"),
                 Mission(["N"],              "2. Side Quest", "Open the 640 note door"),
-                Mission(["T"],              "2. Side Quest", "{} tokens".format(random.randint(70,90))),
-                Mission(["J"],              "2. Side Quest", "{} jiggies".format(random.randint(40,55))),
+                Mission(["T"],              "2. Side Quest", "{} tokens [r]".format(random.randint(70,90))),
+                Mission(["J"],              "2. Side Quest", "{} jiggies [r]".format(random.randint(40,55))),
                 Mission([],                 "2. Side Quest", "All 3 Cheato Visits"),
                 Mission(["J"],              "2. Side Quest", "2 jiggies from each world"),
                 Mission(["J"],              "2. Side Quest", "All lair jiggies"),
@@ -121,10 +129,10 @@ def main():
             [ # EARLY_GAME
                 Mission(["O", "A"],         "3. Early Game", "All Jinjos in CC"),
                 Mission(["O", "A"],         "3. Early Game", "All Jinjos in FP"),
-                Mission(["J", "A"],         "3. Early Game", "{} jiggies in TTC".format(random.randint(8,10))),
-                Mission(["J", "A"],         "3. Early Game", "{} jiggies in CC".format(random.randint(8,10))),
-                Mission(["N", "A"],         "3. Early Game", "{} notes in CC".format(random.randint(75,100))),
-                Mission(["N", "A"],         "3. Early Game", "{} notes in FP".format(random.randint(75,100))),
+                Mission(["J", "A"],         "3. Early Game", "{} jiggies in TTC [r]".format(random.randint(8,10))),
+                Mission(["J", "A"],         "3. Early Game", "{} jiggies in CC [r]".format(random.randint(8,10))),
+                Mission(["N", "A"],         "3. Early Game", "{} notes in CC [r]".format(random.randint(75,100))),
+                Mission(["N", "A"],         "3. Early Game", "{} notes in FP [r]".format(random.randint(75,100))),
                 Mission(["H", "A"],         "3. Early Game", "Both HCs in TTC"),
                 Mission(["H", "A"],         "3. Early Game", "Both HCs in CC"),
                 Mission(["H", "A"],         "3. Early Game", "Both HCs in FP"),
@@ -133,7 +141,7 @@ def main():
                 Mission(["R"],              "3. Early Game", "Begin run w/ MM 100% Trotless"),
                 Mission(["T", "A"],         "3. Early Game", "All tokens in FP"),
                 Mission(["J"],              "3. Early Game", "Merry Christmas! (Visit Boggy's Igloo w/ him in it & give presents)"),
-                Mission(["J", "A"],         "3. Early Game", "{} jiggies in FP".format(random.randint(4,9))),
+                Mission(["J", "A"],         "3. Early Game", "{} jiggies in FP [r]".format(random.randint(4,9))),
                 Mission(["J", "R"],         "3. Early Game", "No jiggies in MM"),
                 Mission(["J", "T"],         "3. Early Game", "Termite's Quest: 8 jiggies, 90 notes, & 1 HC as the termite"),
                 # Mission([],      "3. Early Game", ""),
@@ -142,28 +150,28 @@ def main():
                 Mission(["O", "A"],         "4. Mid Game", "All Jinjos in MMM"),
                 Mission(["O", "A"],         "4. Mid Game", "All Jinjos in GV"),
                 Mission(["O", "A"],         "4. Mid Game", "All Jinjos in RBB"),
-                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in MMM".format(random.randint(5,10))),
-                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in RBB".format(random.randint(3,10))),
-                Mission(["N", "A"],         "4. Mid Game", "{} notes in MMM".format(random.randint(50,100))),
-                Mission(["N", "A"],         "4. Mid Game", "{} notes in GV".format(random.randint(40,100))),
-                Mission(["N", "A"],         "4. Mid Game", "{} notes in RBB".format(random.randint(40,100))),
+                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in MMM [r]".format(random.randint(5,10))),
+                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in RBB [r]".format(random.randint(3,10))),
+                Mission(["N", "A"],         "4. Mid Game", "{} notes in MMM [r]".format(random.randint(50,100))),
+                Mission(["N", "A"],         "4. Mid Game", "{} notes in GV [r]".format(random.randint(40,100))),
+                Mission(["N", "A"],         "4. Mid Game", "{} notes in RBB [r]".format(random.randint(40,100))),
                 Mission(["H", "A"],         "4. Mid Game", "Both HCs in MMM"),
                 Mission(["H", "A"],         "4. Mid Game", "Both HCs in GV"),
                 Mission(["H", "A"],         "4. Mid Game", "Both HCs in RBB"),
                 Mission(["T", "A"],         "4. Mid Game", "{} tokens in MMM".format(random.randint(10,16))),
-                Mission(["T", "A"],         "4. Mid Game", "All tokens in GV"),
-                Mission(["T", "A"],         "4. Mid Game", "{} tokens in RBB".format(random.randint(10,15))),
+                Mission(["T", "A"],         "4. Mid Game", "All tokens in GV [r]"),
+                Mission(["T", "A"],         "4. Mid Game", "{} tokens in RBB [r]".format(random.randint(10,15))),
                 Mission([],                 "4. Mid Game", "MMM witch switch jiggy"),
                 Mission([],                 "4. Mid Game", "Kill all 10 Limbos (skeletons) in MMM"),
                 Mission([],                 "4. Mid Game", "GV rings jiggy without flight or bee"),
                 Mission(["J"],              "4. Mid Game", "Abuse Gobi (beak bust Gobi at all 5 locations)"),
-                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in GV".format(random.randint(3,9))),
+                Mission(["J", "A"],         "4. Mid Game", "{} jiggies in GV [r]".format(random.randint(3,9))),
                 # Mission([],      "4. Mid Game", ""),
             ],
             [ # LATE_GAME
                 Mission(["O", "A"],         "5. Late Game", "All Jinjos in CCW"),
                 Mission(["O", "A"],         "5. Late Game", "All Jinjos in BGS"),
-                Mission(["N", "A"],         "5. Late Game", "{} notes in BGS".format(random.randint(50,100))),
+                Mission(["N", "A"],         "5. Late Game", "{} notes in BGS [r]".format(random.randint(50,100))),
                 Mission(["H", "A"],         "5. Late Game", "Both HCs in BGS"),
                 Mission(["H", "A"],         "5. Late Game", "Both HCs in CCW"),
                 Mission(["T", "A"],         "5. Late Game", "All tokens in BGS"),
@@ -175,63 +183,80 @@ def main():
                 Mission(["J"],              "5. Late Game", "Nabnut's Jiggy"),
                 Mission([],                 "5. Late Game", "Kill all 5 Sir Slushes in winter"),
                 Mission(["J"],              "5. Late Game", "Flower jiggy in CCW"),
-                Mission(["N", "A"],         "5. Late Game", "{} notes in CCW".format(random.randint(30,80))),
-                Mission(["J", "A"],         "5. Late Game", "{} jiggies in CCW".format(random.randint(3,8))),
-                Mission(["J"],              "5. Late Game", "{} jiggies in BGS".format(random.randint(5,8))),
-                Mission(["T", "A"],         "5. Late Game", "{} tokens in CCW".format(random.randint(15,25))),
+                Mission(["N", "A"],         "5. Late Game", "{} notes in CCW [r]".format(random.randint(30,80))),
+                Mission(["J", "A"],         "5. Late Game", "{} jiggies in CCW [r]".format(random.randint(3,8))),
+                Mission(["J"],              "5. Late Game", "{} jiggies in BGS [r]".format(random.randint(5,8))),
+                Mission(["T", "A"],         "5. Late Game", "{} tokens in CCW [r]".format(random.randint(15,25))),
                 Mission(["J", "T", "R"],    "5. Late Game", "Collect 10 jiggies as the bee"),
                 # Mission([],      "5. Late Game", ""),
             ]
         ]
 
 # ----------------- LONG MISSION GENERATION -----------------
-        goals = []
-        codes1 = []
-        codes2 = []
-        codes3 = []
-        i_list = []
+        if show_missions_var:
+            # show missions instead of generating them
+            text.config(state = tk.NORMAL)
+            text.delete("1.0", tk.END)
+            for x in missions:
+                text.insert(tk.END, x[0].num+"\n")
+                for m in x:
+                    text.insert(tk.END, m.name)
+                    if codesvar.get() == 1:
+                        text.insert(tk.END, " -- ")
+                        text.insert(tk.END, ', '.join(m.codes))
+                    text.insert(tk.END, "\n")
+                text.insert(tk.END, "\n")
+            text.config(state = tk.DISABLED)
+            show_missions_var = False
 
-        for i in range(len(missions)):
-            if i == 0:
-                # do main objective before all else
-                count = len(missions[i])
-                rn = random.randint(0, count-1)
-                mission = missions[i][rn]
-                for c in mission.codes:
-                    codes1.append(c)
-                goals.append(mission)
+        else:
+            goals = []
+            codes1 = []
+            codes2 = []
+            codes3 = []
+            i_list = []
 
-            elif i != 0:
-                # after i = 0 do them randomly
-                rand_i = random.randint(1,len(missions)-1)
-                while rand_i in i_list:
-                    rand_i = random.randint(1,len(missions)-1)
-                i_list.append(rand_i)
-                count = len(missions[rand_i])
-                
-                # get random mission
-                done = False
-                while not done:
+            for i in range(len(missions)):
+                if i == 0:
+                    # do main objective before all else
+                    count = len(missions[i])
                     rn = random.randint(0, count-1)
-                    mission = missions[rand_i][rn]
-                    exists = False
+                    mission = missions[i][rn]
                     for c in mission.codes:
-                        if c in codes1 or c in codes3:
-                            exists = True
-                            break
-                    if exists: continue
-                    done = True
-                # add mission's codes to list of codes
-                for c in mission.codes:
-                    if c in codes2:
-                        codes3.append(c)
-                    else:
-                        codes2.append(c)
-                
-                goals.append(mission)
-            goals_sort = sorted(goals, key=attrgetter('num'))
-            # write the sorted goals to the text box widget
-            write_text(goals_sort, codesvar.get(), False)
+                        codes1.append(c)
+                    goals.append(mission)
+
+                elif i != 0:
+                    # after i = 0 do them randomly
+                    rand_i = random.randint(1,len(missions)-1)
+                    while rand_i in i_list:
+                        rand_i = random.randint(1,len(missions)-1)
+                    i_list.append(rand_i)
+                    count = len(missions[rand_i])
+                    
+                    # get random mission
+                    done = False
+                    while not done:
+                        rn = random.randint(0, count-1)
+                        mission = missions[rand_i][rn]
+                        exists = False
+                        for c in mission.codes:
+                            if c in codes1 or c in codes3:
+                                exists = True
+                                break
+                        if exists: continue
+                        done = True
+                    # add mission's codes to list of codes
+                    for c in mission.codes:
+                        if c in codes2:
+                            codes3.append(c)
+                        else:
+                            codes2.append(c)
+                    
+                    goals.append(mission)
+                goals_sort = sorted(goals, key=attrgetter('num'))
+                # write the sorted goals to the text box widget
+                write_text(goals_sort, codesvar.get(), False)
 
 
     elif short.get() == 1:
@@ -313,53 +338,78 @@ def main():
         ]
 
 # ----------------- SHORT MISSION GENERATION -----------------
-        goals = []
-        codes = []
-        i_list = []
+        if show_missions_var:
+            # show missions instead of generating them
+            text.config(state = tk.NORMAL)
+            text.delete("1.0", tk.END)
+            text.insert(tk.END, "LIST OF SHORT MISSIONS:\n\n")
+            for x in missions:
+                text.insert(tk.END, x[0].num+"\n")
+                for m in x:
+                    text.insert(tk.END, m.name)
+                    if codesvar.get() == 1:
+                        text.insert(tk.END, " -- ")
+                        text.insert(tk.END, ', '.join(m.codes))
+                    text.insert(tk.END, "\n")
+                text.insert(tk.END, "\n")
+            text.config(state = tk.DISABLED)
+            show_missions_var = False
+        
+        else:
+            goals = []
+            codes = []
+            i_list = []
 
-        for i in range(len(missions)):
-            if i == 0:
-                # do main objective before all else
-                count = len(missions[i])
-                rn = random.randint(0, count-1)
-                mission = missions[i][rn]
-                for c in mission.codes:
-                    codes.append(c)
-                goals.append(mission)
-
-            elif i != 0:
-                # after i = 0 do them randomly
-                rand_i = random.randint(1,len(missions)-1)
-                while rand_i in i_list:
-                    rand_i = random.randint(1,len(missions)-1)
-                i_list.append(rand_i)
-                count = len(missions[rand_i])
-
-                # get random mission
-                done = False
-                while not done:
+            for i in range(len(missions)):
+                if i == 0:
+                    # do main objective before all else
+                    count = len(missions[i])
                     rn = random.randint(0, count-1)
-                    mission = missions[rand_i][rn]
-                    exists = False
+                    mission = missions[i][rn]
                     for c in mission.codes:
-                        if c in codes:
-                            exists = True
-                            break
-                    if exists: continue
-                    done = True
+                        codes.append(c)
+                    goals.append(mission)
 
-                # comment this code below to enable/disable repeating codes for early/late game
-                # if it's commented out that means codes can repeat for 2/3 (as long as they don't share 1's goal)
-                # vvvvvvvvvvvvvvvvvvvvvvv
-                for c in mission.codes:
-                    codes.append(c)
-                # ^^^^^^^^^^^^^^^^^^^^^^^
-            
-                goals.append(mission)
-            goals_sort = sorted(goals, key=attrgetter('num'))
-            # write the sorted goals to the text box widget
-            write_text(goals_sort, codesvar.get(), True)
+                elif i != 0:
+                    # after i = 0 do them randomly
+                    rand_i = random.randint(1,len(missions)-1)
+                    while rand_i in i_list:
+                        rand_i = random.randint(1,len(missions)-1)
+                    i_list.append(rand_i)
+                    count = len(missions[rand_i])
 
+                    # get random mission
+                    done = False
+                    while not done:
+                        rn = random.randint(0, count-1)
+                        mission = missions[rand_i][rn]
+                        exists = False
+                        for c in mission.codes:
+                            if c in codes:
+                                exists = True
+                                break
+                        if exists: continue
+                        done = True
+
+                    # comment this code below to enable/disable repeating codes for early/late game
+                    # if it's commented out that means codes can repeat for 2/3 (as long as they don't share 1's goal)
+                    # vvvvvvvvvvvvvvvvvvvvvvv
+                    for c in mission.codes:
+                        codes.append(c)
+                    # ^^^^^^^^^^^^^^^^^^^^^^^
+                
+                    goals.append(mission)
+                goals_sort = sorted(goals, key=attrgetter('num'))
+                # write the sorted goals to the text box widget
+                write_text(goals_sort, codesvar.get(), True)
+
+# -----------------------------------------------------
+# ----------------- SHOW ALL MISSIONS -----------------
+# -----------------------------------------------------
+def print_missions():
+    global show_missions_var
+    show_missions_var = True
+    main()
 
 # --------------------------------------------------
 # ----------------- CONFIG BUTTONS -----------------
@@ -376,7 +426,11 @@ main_button.config(\
     text = "Click to generate missions!", \
     command = main)
 
-quitbutton.config(\
+missions_button.config(\
+    text = "Click to show list of missions", \
+    command = print_missions)
+
+quit_button.config(\
     text = "Quit", \
     command = window.destroy)
 
@@ -393,5 +447,5 @@ window.grid_rowconfigure(0, weight=1)
 
 window.title("BK Missions Generator v1.2")
 window.minsize(500,120)
-window.maxsize(1000,300)
+window.maxsize(1920,1080)
 window.mainloop()
