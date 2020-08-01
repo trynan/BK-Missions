@@ -197,6 +197,7 @@ def main():
             # show missions instead of generating them
             text.config(state = tk.NORMAL)
             text.delete("1.0", tk.END)
+            text.insert(tk.END, "LIST OF LONG MISSIONS:\n\n")
             for x in missions:
                 text.insert(tk.END, x[0].num+"\n")
                 for m in x:
