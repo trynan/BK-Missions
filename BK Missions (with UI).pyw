@@ -107,7 +107,7 @@ def main():
                 Mission(["J", "R"],         "1. Main Objective", "85 jiggies", 2),
                 
                 Mission(["N", "J", "R"],    "1. Main Objective", "Open DoG & defeat Grunty", 0),
-                Mission(["J"],              "1. Main Objective", "Humanitarian: Chimpy, Blubber, raise Clanker/fix teeth, Tanktup, presents, Gobi's rock, Trunker, Snorkel, Nabnut, Eyrie, Gnawty's boulder, Tooty", 0),
+                Mission(["J"],              "1. Main Objective", "Humanitarian: Jiggies: Chimpy, Blubber, raise Clanker/fix both teeth, Tanktup, presents in FP, Gobi's rock, Trunker, Snorkel, Nabut, Eyrie\n Others (no jiggy): Gnawty's Boulder, Tooty", 0),
                 Mission(["N", "R"],         "1. Main Objective", "Open All 12 Note Doors and Defeat Grunty", 0),
                 Mission(["A"],              "1. Main Objective", "All of 1 type of collectible from each world (all tokens, honeycombs, notes, or jiggies)", 0),
                 # Mission([],      "1. Main Objective", ""),
@@ -223,7 +223,7 @@ def main():
                 Mission([],                 "5. Late Game", "All caterpillars", 0),
                 Mission(["J"],              "5. Late Game", "Eyrie's Jiggy", 0),
                 Mission(["J"],              "5. Late Game", "Nabnut's Jiggy", 0),
-                Mission([],                 "5. Late Game", "Kill all 5 Sir Slushes in winter", 0),
+                Mission([],                 "5. Late Game", "Kill all 6 Sir Slushes in winter", 0),
                 Mission(["J"],              "5. Late Game", "Flower jiggy in CCW", 0),
                 Mission(["N", "A"],         "5. Late Game", "{} notes in CCW [r 30-80]".format(random.randint(30,80)), 1),
                 Mission(["N", "A"],         "5. Late Game", "80 notes in CCW", 2),
@@ -427,7 +427,7 @@ def main():
                 Mission([],                 "3. Late Game", "All caterpillars", 0),
                 Mission(["J"],              "3. Late Game", "Eyrie's jiggy", 0),
                 Mission(["J"],              "3. Late Game", "Nabnut's jiggy", 0),
-                Mission([],                 "3. Late Game", "Kill all 5 Sir Slushes in winter", 0),
+                Mission([],                 "3. Late Game", "Kill all 6 Sir Slushes in winter", 0),
                 Mission(["J"],              "3. Late Game", "Flower jiggy in CCW", 0),
                 Mission(["N", "A"],         "3. Late Game", "{} notes in CCW [r 30-80]".format(random.randint(30,80)), 1),
                 Mission(["N", "A"],         "3. Late Game", "80 notes in CCW", 2),
@@ -552,11 +552,11 @@ codes_check.config(\
     variable = codesvar)
 
 main_button.config(\
-    text = "Click to generate missions!", \
+    text = "Generate Missions", \
     command = main)
 
 missions_button.config(\
-    text = "Click to show list of missions", \
+    text = "Show List of Missions", \
     command = print_missions)
 
 quit_button.config(\
@@ -574,7 +574,7 @@ vscrollb.config(\
 window.grid_columnconfigure(1, weight=1)
 window.grid_rowconfigure(0, weight=1)
 
-window.title("BK Missions Generator v2.6")
+window.title("BK Missions Generator v2.7")
 window.minsize(500,300)
 window.maxsize(1920,1080)
 window.mainloop()
