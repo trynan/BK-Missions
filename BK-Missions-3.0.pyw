@@ -568,7 +568,7 @@ def main():
                     if codesvar.get() == 1:
                         btextlist[i].set(g.name + ' -- ' + ', '.join(g.codes))
                     else: 
-                        btextlist[i].set(g.num + g.name)
+                        btextlist[i].set(g.name)
                 b4t.set("-----")
                 b5t.set("-----")
 
