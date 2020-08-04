@@ -582,14 +582,18 @@ def rem_text():
         t.grid_forget()
     for s in slist:
         s.grid_forget()
-    win.geometry("150x675")
+    # win.geometry("150x675")
+    win.grid_columnconfigure(0, weight=1)
+    win.grid_columnconfigure(1, weight=0)
 
 def shw_text():
+    win.grid_columnconfigure(0, weight=0)
+    win.grid_columnconfigure(1, weight=1)
     for i,t in enumerate(tlist):
         t.grid(row = i+5, column = 1, sticky='nsew')
     for i,s in enumerate(slist):
         s.grid(row = i+5, column = 2, sticky='nsew')
-    win.geometry("360x675")
+    # win.geometry("360x675")
 
 def clr_text():
     for t in tlist:
@@ -651,5 +655,5 @@ for i in range(5, 10):
 win.title("BK Missions Generator v3.0")
 win.geometry("360x675")
 win.minsize(150, 675)
-win.maxsize(1920,1080)
+# win.maxsize(1920,1080)
 win.mainloop()
