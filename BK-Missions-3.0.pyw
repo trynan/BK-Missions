@@ -369,8 +369,8 @@ def main():
                 Mission(["O"],              "1. Main Objective", "All Jinjos of any 1 color (your choice)", 0),
                 Mission([],                 "1. Main Objective", "All 10 Brentilda visits", 0),
                 Mission(["N"],              "1. Main Objective", "Open the 640 note door", 0),
-                Mission(["T"],              "2. Side Quest", "{} tokens [r 70-90]".format(random.randint(70,90)), 1),
-                Mission(["T"],              "2. Side Quest", "90 tokens", 2),
+                Mission(["T"],              "1. Main Objective", "{} tokens [r 70-90]".format(random.randint(70,90)), 1),
+                Mission(["T"],              "1. Main Objective", "90 tokens", 2),
 
                 Mission(["J"],              "1. Main Objective", "{} jiggies [r 40-55]".format(random.randint(40,55)), 1),
                 Mission(["J"],              "1. Main Objective", "45 jiggies", 2),
@@ -568,7 +568,7 @@ def main():
                     if codesvar.get() == 1:
                         btextlist[i].set(g.name + ' -- ' + ', '.join(g.codes))
                     else: 
-                        btextlist[i].set(g.name)
+                        btextlist[i].set(g.num + g.name)
                 b4t.set("-----")
                 b5t.set("-----")
 
