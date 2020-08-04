@@ -113,6 +113,9 @@ def main():
     for t in tlist:
         # clear text boxes
         t.delete("1.0", END)
+    for m in blist:
+        # set backgrounds back to white
+        m.config(bg = "White")
     # define missions
     if short.get() == 0:
 # ----------------- LONG MISSION LIST -----------------
