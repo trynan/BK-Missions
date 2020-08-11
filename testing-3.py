@@ -1,7 +1,15 @@
 from tkinter import *
+import tkinter.font as tkFont
+import tkinter.ttk as ttk
 from operator import attrgetter
 import random
+import configparser
 
+config = configparser.ConfigParser()
+config.read('bk_config.ini')
+keylist = []
+for key in config['settings']:
+    keylist.append(config['settings'][key])
 
 class Mission:
     def __init__(self, codes, num, name, rand):
@@ -18,9 +26,13 @@ show_missions_var = False
 
 win = Tk()
 
+win_size_var = StringVar(value = '360x675')
+show_text_var = IntVar()
 short = IntVar()
 codesvar = IntVar()
 randvar = IntVar()
+font_size_var = IntVar()
+varlist = [short, codesvar, randvar, win_size_var, show_text_var, font_size_var]
 
 top_frame = Frame(win)
 top_frame.grid(row = 0, column = 0, columnspan = 3)
@@ -42,42 +54,31 @@ b5t = StringVar(value = "Fifth Goal")
 btextlist = [b1t, b2t, b3t, b4t, b5t]
 
 
-b1 = Button(win, textvar = b1t, bg = "White", \
-    wraplength = 140, width = 20, command = lambda: colorchange(b1))
-
-b2 = Button(win, textvar = b2t, bg = "White", \
-    wraplength = 140, width = 20, command = lambda: colorchange(b2))
-
-b3 = Button(win, textvar = b3t, bg = "White", \
-    wraplength = 140, width = 20, command = lambda: colorchange(b3))
-
-b4 = Button(win, textvar = b4t, bg = "White", \
-    wraplength = 140, width = 20, command = lambda: colorchange(b4))
-
-b5 = Button(win, textvar = b5t, bg = "White", \
-    wraplength = 140, width = 20, command = lambda: colorchange(b5))
+b1 = Button(win, command = lambda: colorchange(b1))
+b2 = Button(win, command = lambda: colorchange(b2))
+b3 = Button(win, command = lambda: colorchange(b3))
+b4 = Button(win, command = lambda: colorchange(b4))
+b5 = Button(win, command = lambda: colorchange(b5))
 
 blist = [b1, b2, b3, b4, b5]
 
-b1.grid(row = 5, column = 0, sticky='nsew')
-b2.grid(row = 6, column = 0, sticky='nsew')
-b3.grid(row = 7, column = 0, sticky='nsew')
-b4.grid(row = 8, column = 0, sticky='nsew')
-b5.grid(row = 9, column = 0, sticky='nsew')
+for i,b in enumerate(blist):
+    b.grid(row = i+5, column = 0, sticky = 'nsew')
+    b.config(textvar = btextlist[i], bg = "White", \
+        wraplength = 175, width = 20)
+    if varlist[4].get() == 0:
+        size = config['settings']['win_size'][0:4]
+        if 'x' in size:
+            size = size[0:3]
+        b.config(wraplength = size)
 
-t1 = Text(win, height = 7, width = 15)
-t2 = Text(win, height = 7, width = 15)
-t3 = Text(win, height = 7, width = 15)
-t4 = Text(win, height = 7, width = 15)
-t5 = Text(win, height = 7, width = 15)
+t1 = Text(win)
+t2 = Text(win)
+t3 = Text(win)
+t4 = Text(win)
+t5 = Text(win)
 
 tlist = [t1, t2, t3, t4, t5]
-
-t1.grid(row = 5, column = 1, sticky='nsew')
-t2.grid(row = 6, column = 1, sticky='nsew')
-t3.grid(row = 7, column = 1, sticky='nsew')
-t4.grid(row = 8, column = 1, sticky='nsew')
-t5.grid(row = 9, column = 1, sticky='nsew')
 
 s1 = Scrollbar(win)
 s2 = Scrollbar(win)
@@ -87,17 +88,94 @@ s5 = Scrollbar(win)
 
 slist = [s1, s2, s3, s4, s5]
 
-s1.grid(row = 5, column = 2, sticky='nsew')
-s2.grid(row = 6, column = 2, sticky='nsew')
-s3.grid(row = 7, column = 2, sticky='nsew')
-s4.grid(row = 8, column = 2, sticky='nsew')
-s5.grid(row = 9, column = 2, sticky='nsew')
+for i,t in enumerate(tlist):
+    t.config(height = 7, width = 15)
+    t.grid(row = i+5, column = 1, sticky='nsew')
+    t['yscrollcommand'] = slist[i].set
 
-t1['yscrollcommand'] = s1.set
-t2['yscrollcommand'] = s2.set
-t3['yscrollcommand'] = s3.set
-t4['yscrollcommand'] = s4.set
-t5['yscrollcommand'] = s5.set
+for i,s in enumerate(slist):
+    s.grid(row = i+5, column = 2, sticky='nsew')
+
+buttonlist = [blist, tlist]
+
+# ----------------------------------------------------
+# ----------------- BUTTON FUNCTIONS -----------------
+# ----------------------------------------------------
+def get_current_size(t):
+    """ t is text field to put result into """
+    t.delete(0, END)
+    t.insert(END, win.winfo_geometry())
+
+def rem_text(b,c):
+    """ b is the button pressed to call this func, c is the other button """
+    global show_text_var
+    varlist[4].set(0)
+    for t in tlist:
+        t.grid_forget()
+    for s in slist:
+        s.grid_forget()
+    # win.geometry("150x675")
+    win.grid_columnconfigure(0, weight=1)
+    win.grid_columnconfigure(1, weight=0)
+    for p in blist:
+        p.config(wraplength = win.winfo_width())
+    c.config(state = NORMAL)
+    b.config(state = DISABLED)
+
+
+def shw_text(b,c):
+    """ b is the button pressed to call this func, c is the other button """
+    global show_text_var
+    varlist[4].set(1)
+    win.grid_columnconfigure(0, weight=0)
+    win.grid_columnconfigure(1, weight=1)
+    for i,t in enumerate(tlist):
+        t.grid(row = i+5, column = 1, sticky='nsew')
+    for i,s in enumerate(slist):
+        s.grid(row = i+5, column = 2, sticky='nsew')
+    for p in blist:
+        p.config(wraplength = 175)
+    # win.geometry("360x675")
+    c.config(state = NORMAL)
+    b.config(state = DISABLED)
+
+def clr_text():
+    for t in tlist:
+        t.delete("1.0", END)
+
+def apply_settings(t1, t2):
+    """ t1 is an entry window that we need text from. so is t2 """
+    global win_size_var
+    global font_size_var
+    fntsize = t2.get()
+    default_font.config(size = fntsize)
+    txt = t1.get()
+    win.geometry(txt)
+    font_size_var.set(fntsize)
+    win_size_var.set(txt)
+    for b in blist:
+        if varlist[4].get() == 0:
+            b.config(wraplength = win.winfo_width())
+        else:
+            b.config(wraplength = 175)
+
+# -----------------------------------------------------
+# ----------------- CONFIG FILE SETUP -----------------
+# -----------------------------------------------------
+for i,val in enumerate(keylist):
+    varlist[i].set(val)
+
+default_font = tkFont.Font(family = 'TkTextFont', size = font_size_var.get())
+for k in buttonlist:
+    for x in k:
+        x.config(font = default_font)
+
+def set_default():
+    for i,key in enumerate(config['settings']):
+        config.set('settings', key, str(varlist[i].get()))
+    with open('bk_config.ini', 'w') as configfile:
+        config.write(configfile)
+
 
 
 # ========================================================================================================
@@ -113,6 +191,9 @@ def main():
     for t in tlist:
         # clear text boxes
         t.delete("1.0", END)
+    for m in blist:
+        # set backgrounds back to white
+        m.config(bg = "White")
     # define missions
     if short.get() == 0:
 # ----------------- LONG MISSION LIST -----------------
@@ -269,7 +350,7 @@ def main():
             # show missions instead of generating them
             new_win = Toplevel()
             new_win.title = "Missions List"
-            text = Text(new_win)
+            text = Text(new_win, font = default_font)
             text.grid(row = 0, column = 0)
 
             text.config(state = NORMAL)
@@ -366,8 +447,8 @@ def main():
                 Mission(["O"],              "1. Main Objective", "All Jinjos of any 1 color (your choice)", 0),
                 Mission([],                 "1. Main Objective", "All 10 Brentilda visits", 0),
                 Mission(["N"],              "1. Main Objective", "Open the 640 note door", 0),
-                Mission(["T"],              "2. Side Quest", "{} tokens [r 70-90]".format(random.randint(70,90)), 1),
-                Mission(["T"],              "2. Side Quest", "90 tokens", 2),
+                Mission(["T"],              "1. Main Objective", "{} tokens [r 70-90]".format(random.randint(70,90)), 1),
+                Mission(["T"],              "1. Main Objective", "90 tokens", 2),
 
                 Mission(["J"],              "1. Main Objective", "{} jiggies [r 40-55]".format(random.randint(40,55)), 1),
                 Mission(["J"],              "1. Main Objective", "45 jiggies", 2),
@@ -480,7 +561,7 @@ def main():
             # show missions instead of generating them
             new_win = Toplevel()
             new_win.title = "Missions List"
-            text = Text(new_win)
+            text = Text(new_win, font = default_font)
             text.grid(row = 0, column = 0)
 
             text.config(state = NORMAL)
@@ -577,67 +658,76 @@ def mission_list():
     show_missions_var = True
     main()
 
-def rem_text():
-    for t in tlist:
-        t.grid_forget()
-    for s in slist:
-        s.grid_forget()
-    win.geometry("150x675")
-
-def shw_text():
-    for i,t in enumerate(tlist):
-        t.grid(row = i+5, column = 1, sticky='nsew')
-    for i,s in enumerate(slist):
-        s.grid(row = i+5, column = 2, sticky='nsew')
-    win.geometry("360x675")
-
-def clr_text():
-    for t in tlist:
-        t.delete("1.0", END)
-
-
 def show_settings():
+    global win_size_var
+    global font_size_var
     settings_win = Toplevel(win)
     settings_win.title("Settings")
-    new_quit_button = Button(settings_win, text = "Exit Settings", command = settings_win.destroy)
+    new_quit_button = Button(settings_win, text = "Exit settings", font = default_font, command = settings_win.destroy)
 
-    short_check = Checkbutton(settings_win, text = "Short (if checked, short\nboard will be generated)", variable = short)
+    short_check = Checkbutton(settings_win, text = "Short (if checked, short\nboard will be generated)", font = default_font, variable = short)
 
-    rand_check = Checkbutton(settings_win, text = "Unrandomize goals (by default,\ncertain goals are randomized)", variable = randvar)
+    rand_check = Checkbutton(settings_win, text = "Unrandomize goals (by default,\ncertain goals are randomized)", font = default_font, variable = randvar)
 
-    codes_check = Checkbutton(settings_win, text = "Show codes after each goal", variable = codesvar)
+    codes_check = Checkbutton(settings_win, text = "Show codes after each goal", font = default_font, variable = codesvar)
 
-    remove_text = Button(settings_win, text = "Hide Text Boxes", command = rem_text)
+    font_size_label = Label(settings_win, text = "Font size\n(default: 10)", font = default_font)
 
-    show_text = Button(settings_win, text = "Show Text Boxes", command = shw_text)
+    font_size = Entry(settings_win, textvariable = font_size_var, width = 8)
 
-    clear_text = Button(settings_win, text = "Clear Text Boxes", command = clr_text)
+    win_size_label = Label(settings_win, text = "Window size\n(default: 360x675)", font = default_font)
+    
+    win_size = Entry(settings_win, textvariable = win_size_var, width = 18)
+
+    current_size = Button(settings_win, text = "Get current size/position", font = default_font, command = lambda: get_current_size(win_size))
+
+    apply = Button(settings_win, text = "Apply settings", font = default_font, command = lambda: apply_settings(win_size, font_size))
+
+    remove_text = Button(settings_win, text = "Hide text boxes", font = default_font, command = lambda: rem_text(remove_text, show_text))
+
+    show_text = Button(settings_win, text = "Show text boxes", font = default_font, command = lambda: shw_text(show_text, remove_text))
+
+    clear_text = Button(settings_win, text = "Clear text boxes", font = default_font, command = clr_text)
+
+    set_default_button = Button(settings_win, text = "Set current values as defaults", font = default_font, command = set_default)
+
+    sep = ttk.Separator(settings_win)
+
+    if varlist[4].get() == 0:
+        remove_text.config(state = DISABLED)
+    else:
+        show_text.config(state = DISABLED)
 
     short_check.grid(row = 0, column = 0, pady=10, columnspan = 2)
     codes_check.grid(row = 1, column = 0, pady=10, columnspan = 2)
     rand_check.grid(row = 2, column = 0, pady=10, columnspan = 2)
-    remove_text.grid(row = 3, column = 0, pady=10)
-    show_text.grid(row = 3, column = 1, pady=10)
-    clear_text.grid(row = 4, column = 0, columnspan = 2)
-    new_quit_button.grid(row = 5, column = 0, columnspan = 2, pady=10)
-    settings_win.geometry("200x290")
-    settings_win.minsize(200, 290)
+    font_size_label.grid(row = 3, column = 0)
+    font_size.grid(row = 3, column = 1, pady=10)
+    win_size_label.grid(row = 4, column = 0)
+    win_size.grid(row = 4, column = 1)
+    current_size.grid(row = 5, column = 1, padx=10)
+    remove_text.grid(row = 6, column = 0, padx=10, pady=10)
+    show_text.grid(row = 6, column = 1, padx=10)
+    clear_text.grid(row = 7, column = 0, columnspan = 2, pady=10)
+    sep.grid(row = 8, column = 0, columnspan = 2, sticky = 'nsew')
+    apply.grid(row = 9, column = 0, columnspan = 2, pady=10)
+    set_default_button.grid(row = 10, column = 0, columnspan = 2)
+    new_quit_button.grid(row = 11, column = 0, columnspan = 2, pady=10)
 
 
 # -------------------------------------------------
 # ----------------- BUTTON CONFIG -----------------
 # -------------------------------------------------
 
-gen_missions = Button(top_frame, text = "Generate Missions", command = main)
+gen_missions = Button(top_frame, text = "Generate Missions", font = default_font, command = main)
 # gen_missions.pack()
 gen_missions.grid(row = 0, column = 3, pady = 6)
 
-show_missions = Button(top_frame, text = "Show list of missions", command = mission_list)
+show_missions = Button(top_frame, text = "Show list of missions", font = default_font, command = mission_list)
 # show_missions.pack()
 show_missions.grid(row = 1, column = 3, pady = 6)
 
-
-settings = Button(top_frame, text = "Settings", command = show_settings)
+settings = Button(top_frame, text = "Settings", font = default_font, command = show_settings)
 # settings.pack()
 settings.grid(row = 2, column = 3, pady = 6)
 
@@ -647,9 +737,17 @@ win.grid_columnconfigure(1, weight=1)
 for i in range(5, 10):
     win.grid_rowconfigure(i, weight = 1)
 
+if config['settings']['show_text'] == '0':
+    for t in tlist:
+        t.grid_forget()
+    for s in slist:
+        s.grid_forget()
+    # win.geometry("150x675")
+    win.grid_columnconfigure(0, weight=1)
+    win.grid_columnconfigure(1, weight=0)
 
 win.title("BK Missions Generator v3.0")
-win.geometry("360x675")
+win.geometry(win_size_var.get())
 win.minsize(150, 675)
-win.maxsize(1920,1080)
+# win.maxsize(1920,1080)
 win.mainloop()
