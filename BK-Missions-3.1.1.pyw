@@ -432,7 +432,7 @@ def main():
 # ----------------- SHORT MISSION LIST -----------------
         missions = [
             [ # MAIN_OBJECTIVE
-                Mission(["H"],              "1. Main Objective", "{} HCs".format(random.randint(14,18)), 1),
+                Mission(["H"],              "1. Main Objective", "{} HCs [r 14-18] ".format(random.randint(14,18)), 1),
                 Mission(["H"],              "1. Main Objective", "18 HCs", 2),
                 Mission(["T"],              "1. Main Objective", "All 5 tranformations", 0),
                 Mission(["O"],              "1. Main Objective", "All Jinjos of any 1 color (your choice)", 0),
