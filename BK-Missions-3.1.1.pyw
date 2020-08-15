@@ -240,7 +240,7 @@ def main():
                 # -- MM --
 				Mission(0, ["R"],           "3. Early Game",        "Begin run w/ MM 100% Trotless"),
 				Mission(0, ["J", "R"],      "3. Early Game",        "No more than 2 jiggies in MM"),
-                Mission(0, ["J", "T"],      "3. Early Game",        "Termite's Quest: 5 jiggies and 1 HC as the termite"),
+                Mission(0, [],              "3. Early Game",        "Termite's Quest: 5 jiggies and 1 HC as the termite"),
 				# -- TTC --
                 Mission(1, ["J", "A"],      "3. Early Game",        "{} jiggies in TTC [r 8-10]".format(random.randint(8,10))),
                 Mission(2, ["J", "A"],      "3. Early Game",        "All jiggies in TTC"),
@@ -453,7 +453,7 @@ def main():
                 # -- MM --
 				Mission(0, ["R"],           "2. Early Game",        "Begin run w/ MM 100% Trotless"),
 				Mission(0, ["J", "R"],      "2. Early Game",        "No more than 2 jiggies in MM"),
-                Mission(0, ["J", "T"],      "2. Early Game",        "Termite's Quest: 5 jiggies and 1 HC as the termite"),
+                Mission(0, [],              "2. Early Game",        "Termite's Quest: 5 jiggies and 1 HC as the termite"),
 				# -- TTC --
                 Mission(1, ["J", "A"],      "2. Early Game",        "{} jiggies in TTC [r 8-10]".format(random.randint(8,10))),
                 Mission(2, ["J", "A"],      "2. Early Game",        "All jiggies in TTC"),
