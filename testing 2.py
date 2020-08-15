@@ -1,87 +1,353 @@
 # testing
 # https://www.tutorialspoint.com/python3/python_gui_programming.htm
 
-from tkinter import *
-import configparser
+from operator import attrgetter
+import random
 
-config = configparser.ConfigParser()
-config.read('configx.ini')
-keylist = []
-for key in config['checks']:
-    keylist.append(config['checks'].getint(key))
+class Mission:
+    def __init__(self, rand, codes, name):
+        self.rand = rand
+        self.codes = codes
+        self.name = name
+
+    def def_num(self, num):
+        self.num = num
+
+long_label_list = [
+    "1. Main Objective",
+    "2. Side Quest",
+    "3. Early Game",
+    "4. Mid Game",
+    "5. Late Game"
+]
+short_label_list = [
+    "1. Main Objective",
+    "2. Early Game",
+    "3. Late Game"
+]
+shortvar = False
+show_missions = False
+
+while input("\nq to quit, enter to do goals\n") != 'q':
+    long_main = [
+        Mission(0, ["N"],           "Open 765 note door"),
+        Mission(0, ["O"],           "All Jinjos"),
+        Mission(0, ["N"],           "Defeat Grunty"),
+        Mission(0, ["H", "T"],      "All 24 honeycombs"),
+        Mission(0, ["T"],           "All 116 tokens"),
+        Mission(0, ["J"],           "Open all 9 worlds"),
+        Mission(0, ["N", "R"],      "All notes"),
+        Mission(1, ["J", "R"],      "{} jiggies [r 75-90]".format(random.randint(75,90))),
+        Mission(2, ["J", "R"],      "85 jiggies"),
+        Mission(0, ["N", "J", "R"], "Open DoG & defeat Grunty"),
+        Mission(0, ["J"],           "Humanitarian: Jiggies: Chimpy, Blubber, raise Clanker/fix both teeth, Tanktup, presents in FP, Gobi's rock, Trunker, Snorkel, Nabut, Eyrie.\nOthers (no jiggy): Gnawty's Boulder, Tooty"),
+        Mission(0, ["N", "R"],      "Open All 12 Note Doors and Defeat Grunty"),
+        Mission(0, ["A"],           "All of 1 type of collectible from each world (all tokens, honeycombs, notes, or jiggies, must do at least one of each in a unique world)"),
+    ]
+    long_side = [
+        Mission(1, ["H", "A"],      "{} HCs [r 14-18]".format(random.randint(14,18))),
+        Mission(2, ["H", "A"],      "18 HCs"),
+        Mission(0, ["T"],           "All 5 transformations"),
+        Mission(0, [],              "All 10 Brentilda visits"),
+        Mission(0, ["O"],           "All 9 orange Jinjos"),
+        Mission(0, ["O"],           "All 9 blue Jinjos"),
+        Mission(0, ["O"],           "All 9 green Jinjos"),
+        Mission(0, ["O"],           "All 9 pink Jinjos"),
+        Mission(0, ["O"],           "All 9 yellow Jinjos"),
+        Mission(0, ["N"],           "Open the 640 note door"),
+        Mission(1, ["T"],           "{} tokens [r 70-90]".format(random.randint(70,90))),
+        Mission(2, ["T"],           "90 tokens"),
+        Mission(1, ["J"],           "{} jiggies [r 40-60]".format(random.randint(40,60))),
+        Mission(2, ["J"],           "45 jiggies"),
+        Mission(0, [],              "All 3 Cheato Visits"),
+        Mission(0, ["J"],           "2 jiggies from each world"),
+        Mission(0, ["J"],           "All lair jiggies"),
+        Mission(0, [],              "Activate all 8 warp cauldrons (not Dingpot)"),
+        Mission(0, ["R"],           "No RBA"),
+        Mission(0, ["R"],           "No FFM"),
+        Mission(0, ["R", "J"],      "No MMM early"),
+        Mission(0, ["R", "J"],      "No FP early"),
+    ]
+    short_main = [
+        Mission(1, ["H"],           "{} HCs [r 14-18] ".format(random.randint(14,18))),
+        Mission(2, ["H"],           "18 HCs"),
+        Mission(0, ["T"],           "All 5 tranformations"),
+        Mission(0, ["O"],           "All Jinjos of any 1 color (your choice)"),
+        Mission(0, [],              "All 10 Brentilda visits"),
+        Mission(0, ["N"],           "Open the 640 note door"),
+        Mission(1, ["T"],           "{} tokens [r 70-90]".format(random.randint(70,90))),
+        Mission(2, ["T"],           "90 tokens"),
+        Mission(1, ["J"],           "{} jiggies [r 45-60]".format(random.randint(45,60))),
+        Mission(2, ["J"],           "45 jiggies"),
+        Mission(0, [],              "All 3 Cheato visits"),
+        Mission(0, [],              "Activate all 8 warp cauldrons (not Dingpot)"),
+        Mission(0, ["T"],           "Save Tooty"),
+        Mission(0, ["J"],           "2 jiggies from each world"),
+        Mission(0, ["J"],           "All lair jiggies"),
+    ]
+    mm = [
+        Mission(0, ["R"],           "Begin run w/ MM 100% Trotless"),
+        Mission(0, ["J", "R"],      "No more than 2 jiggies in MM"),
+        Mission(0, [],              "Termite's Quest: 5 jiggies and 1 HC as the termite"),
+    ]
+    ttc = [
+        Mission(1, ["J", "A"],      "{} jiggies in TTC [r 8-10]".format(random.randint(8,10))),
+        Mission(2, ["J", "A"],      "All jiggies in TTC"),
+        Mission(0, ["H", "A"],      "Both HCs in TTC"),
+        Mission(0, ["T", "A"],      "All tokens in TTC"),
+    ]
+    cc = [
+        Mission(0, ["O", "A"],      "All Jinjos in CC"),
+        Mission(1, ["J", "A"],      "{} jiggies in CC [r 8-10]".format(random.randint(8,10))),
+        Mission(2, ["J", "A"],      "All jiggies in CC"),
+        Mission(1, ["N", "A"],      "{} notes in CC [r 80-100]".format(random.randint(80,100))),
+        Mission(2, ["N", "A"],      "All notes in CC"),
+        Mission(0, ["H", "A"],      "Both HCs in CC"),
+        Mission(0, ["J"],           "All 4 jiggies inside Clanker"),
+    ]
+    fp = [
+        Mission(0, ["O", "A"],      "All Jinjos in FP"),
+        Mission(1, ["N", "A"],      "{} notes in FP [r 80-100]".format(random.randint(80,100))),
+        Mission(2, ["N", "A"],      "All notes in FP"),
+        Mission(0, ["H", "A"],      "Both HCs in FP"),
+        Mission(0, ["T", "A"],      "All tokens in FP"),
+        Mission(0, ["J"],           "Merry Christmas! (Visit Boggy's igloo w/ him in it & give presents)"),
+        Mission(1, ["J", "A"],      "{} jiggies in FP [r 4-9]".format(random.randint(4,9))),
+        Mission(2, ["J", "A"],      "9 jiggies in FP"),	
+    ]
+    mmm = [
+        Mission(0, ["O", "A"],      "All Jinjos in MMM"),
+        Mission(1, ["J", "A"],      "{} jiggies in MMM [r 6-10]".format(random.randint(6,10))),
+        Mission(2, ["J", "A"],      "All jiggies in MMM"),
+        Mission(1, ["N", "A"],      "{} notes in MMM [r 60-100]".format(random.randint(60,100))),
+        Mission(2, ["N", "A"],      "All notes in MMM"),
+        Mission(0, ["H", "A"],      "Both HCs in MMM"),
+        Mission(1, ["T", "A"],      "{} tokens in MMM [r 10-16]".format(random.randint(10,16))),
+        Mission(2, ["T", "A"],      "All (16) tokens in MMM"),
+        Mission(0, [],              "MMM witch switch jiggy"),
+        Mission(0, [],              "Kill all 10 Limbos (skeletons) in MMM"),
+    ]
+    gv = [
+        Mission(0, ["O", "A"],      "All Jinjos in GV"),
+        Mission(1, ["N", "A"],      "{} notes in GV [r 40-100]".format(random.randint(40,100))),
+        Mission(2, ["N", "A"],      "All notes in GV"),
+        Mission(0, ["H", "A"],      "Both HCs in GV"),
+        Mission(0, ["T", "A"],      "All tokens in GV"),
+        Mission(0, [],              "GV rings jiggy without flight or bee"),
+        Mission(1, ["J", "A"],      "{} jiggies in GV [r 4-9]".format(random.randint(4,9))),
+        Mission(2, ["J", "A"],      "9 Jiggies in GV"),
+        Mission(0, ["J"],           "Abuse Gobi (beak bust Gobi at all 5 locations)"),
+    ]
+    rbb = [
+        Mission(0, ["O", "A"],      "All Jinjos in RBB"),
+        Mission(1, ["J", "A"],      "{} jiggies in RBB [r 4-10]".format(random.randint(4,10))),
+        Mission(2, ["J", "A"],      "All jiggies in RBB"),
+        Mission(1, ["N", "A"],      "{} notes in RBB [r 40-100]".format(random.randint(40,100))),
+        Mission(2, ["N", "A"],      "All notes in RBB"),
+        Mission(0, ["H", "A"],      "Both HCs in RBB"),
+        Mission(1, ["T", "A"],      "{} tokens in RBB [r 10-15]".format(random.randint(10,15))),
+        Mission(2, ["T", "A"],      "All tokens in RBB"),
+    ]
+    bgs = [
+        Mission(0, ["O", "A"],      "All Jinjos in BGS"),
+        Mission(1, ["N", "A"],      "{} notes in BGS [r 75-100]".format(random.randint(75,100))),
+        Mission(2, ["N", "A"],      "All notes in BGS"),
+        Mission(0, ["H", "A"],      "Both HCs in BGS"),
+        Mission(0, ["T", "A"],      "All tokens in BGS"),
+        Mission(0, ["J"],           "Croctuses jiggy"),
+        Mission(0, ["J"],           "Tiptup's jiggy"),
+        Mission(0, ["J"],           "Both timed jiggies in BGS"),
+        Mission(1, ["J"],           "{} jiggies in BGS [r 5-8]".format(random.randint(5,8))),
+        Mission(2, ["J"],           "9 jiggies in BGS"),
+    ]
+    ccw = [
+        Mission(0, ["O", "A"],      "All Jinjos in CCW"),
+        Mission(0, ["H", "A"],      "Both HCs in CCW"),
+        Mission(0, [],              "All 21 caterpillars"),
+        Mission(0, [],              "Eyrie's jiggy"),
+        Mission(0, ["J"],           "Nabnut's jiggy"),
+        Mission(0, [],              "Kill all 6 Sir Slushes in winter"),
+        Mission(0, ["J"],           "Flower jiggy in CCW"),
+        Mission(1, ["N", "A"],      "{} notes in CCW [r 50-80]".format(random.randint(50,80))),
+        Mission(2, ["N", "A"],      "80 notes in CCW"),
+        Mission(1, ["J", "A"],      "{} jiggies in CCW [r 4-8]".format(random.randint(4,8))),
+        Mission(2, ["J", "A"],      "8 jiggies in CCW"),
+        Mission(1, ["T", "A"],      "{} tokens in CCW [r 15-25]".format(random.randint(15,25))),
+        Mission(2, ["T", "A"],      "20 tokens in CCW"),
+        Mission(0, ["J", "T", "R"], "Collect 8 jiggies as the bee"),
+    ]
+
+    if not shortvar: # long missions
+        # ----------------- LONG MISSION LIST -----------------
+        missions = [
+            [ # MAIN_OBJECTIVE
+                long_main
+            ],
+            [ # SIDE_QUEST
+                long_side
+            ],
+            [ # EARLY_GAME
+                mm,
+                ttc,
+                cc,
+                fp,
+            ],
+            [ # MID_GAME
+                mmm,
+                gv,
+                rbb
+            ],
+            [ # LATE_GAME
+                bgs,
+                ccw
+            ]
+        ]
+
+        if show_missions: # show missions list
+            for i,x in enumerate(missions):
+                print(long_label_list[i], "\n\n")
+                for c in x:
+                    for g in c:
+                        if g.rand == 2: continue
+                        print(g.name)
+                print("\n")
+
+        # ----------------- LONG MISSION GENERATION -----------------
+        if not show_missions:
+            goals = []
+            codes1 = []
+            codes2 = []
+            codes3 = []
+            i_list =[]
+
+            for i in range(len(missions)):
+                if i == 0:
+                    # do main objective first
+                    count = len(missions[i])
+                    done = False
+                    while not done:
+                        rn1 = random.randint(0, count-1)
+                        rn2 = random.randint(0, len(missions[i][rn1])-1)
+                        mission = missions[i][rn1][rn2]
+                        if mission.rand == 2: continue
+                        done = True
+                    
+                    mission.def_num(i)
+                    for c in mission.codes:
+                        codes1.append(c)
+                
+                elif i != 0:
+                    rand_i = random.randint(1, len(missions)-1)
+                    while rand_i in i_list:
+                        rand_i = random.randint(1,len(missions)-1)
+                    i_list.append(rand_i)
+                    count = len(missions[rand_i])
+
+                    done = False
+                    while not done:
+                        rn1 = random.randint(0, count-1)
+                        rn2 = random.randint(0, len(missions[rand_i][rn1])-1)
+                        mission = missions[rand_i][rn1][rn2]
+                        if mission.rand == 2: continue
+                        exists = False
+                        for c in mission.codes:
+                            if c in codes1 or c in codes3:
+                                exists = True
+                                break
+                        if exists: continue
+                        done = True
+
+                    mission.def_num(rand_i)
+                    for c in mission.codes:
+                        if c in codes2:
+                            codes3.append(c)
+                        else:
+                            codes2.append(c)
+                goals.append(mission)
+
+            goals_sort = sorted(goals, key=attrgetter('num'))
+            for n,g in enumerate(goals_sort):
+                print(long_label_list[n], ': ', g.name, sep='')
 
 
-win = Tk()
+    if shortvar: # short missions
+        # ----------------- SHORT MISSION LIST -----------------
+        missions = [
+            [ # MAIN_OBJECTIVE
+                short_main
+            ],
+            [ # EARLY_GAME
+                mm,
+                ttc,
+                cc,
+                fp,
+                mmm
+            ],
+            [ # LATE_GAME
+                gv,
+                rbb,
+                bgs,
+                ccw
+            ]
+        ]
 
-c1 = IntVar()
-c2 = IntVar()
-c3 = IntVar()
-c4 = IntVar()
-varlist = [c1, c2, c3, c4]
+        if show_missions: # show missions list
+            for i,x in enumerate(missions):
+                print(short_label_list[i], "\n\n")
+                for c in x:
+                    for g in c:
+                        if g.rand == 2: continue
+                        print(g.name)
+                print("\n")
 
-for i,val in enumerate(keylist):
-    varlist[i].set(val)
+        # ----------------- SHORT MISSION GENERATION -----------------
+        if not show_missions:
+            goals = []
+            codes = []
+            i_list = []
 
-def set_default():
-    for i,key in enumerate(config['checks']):
-        config.set('checks', key, str(varlist[i].get()))
-    with open('configx.ini', 'w') as configfile:
-        config.write(configfile)
+            for i in range(len(missions)):
+                if i == 0:
+                    # do main objectives before the rest
+                    count = len(missions[i])
+                    done = False
+                    while not done:
+                        rn1 = random.randint(0, count-1)
+                        rn2 = random.randint(0, len(missions[i][rn1])-1)
+                        mission = missions[i][rn1][rn2]
+                        if mission.rand ==2: continue
+                        done = True
 
+                    mission.def_num(i)
+                    for c in mission.codes:
+                        codes.append(c)
+                
+                elif i != 0:
+                    rand_i = random.randint(1, len(missions)-1)
+                    while rand_i in i_list:
+                        rand_i = random.randint(1,len(missions)-1)
+                    i_list.append(rand_i)
+                    count = len(missions[rand_i])
 
-def open_window():
-    new_win = Toplevel(win)
-    new_win.title("Settings")
-    new_quit_button = Button(new_win, text = "exit settings", command = new_win.destroy)
-    set_default_button = Button(new_win, text = "set currents as defaults", command = set_default)
-    check1 = Checkbutton(new_win, text = "checkbox 1", variable = c1)
-    check2 = Checkbutton(new_win, text = "checkbox 2", variable = c2)
-    check3 = Checkbutton(new_win, text = "checkbox 3", variable = c3)
-    check4 = Checkbutton(new_win, text = "checkbox 4", variable = c4)
-    check1.grid(row = 0, column = 0)
-    check2.grid(row = 0, column = 1)
-    check3.grid(row = 1, column = 0)
-    check4.grid(row = 1, column = 1)
-    new_quit_button.grid(row = 2, column = 0)
-    set_default_button.grid(row = 2, column = 1)
-    new_win.geometry("250x100")
-    new_win.minsize(250,100)
-    new_win.maxsize(500,500)
+                    done = False
+                    while not done:
+                        rn1 = random.randint(0, count-1)
+                        rn2 = random.randint(0, len(missions[rand_i][rn1])-1)
+                        mission = missions[rand_i][rn1][rn2]
+                        if mission.rand == 2: continue
+                        exists = False
+                        for c in mission.codes:
+                            if c in codes:
+                                exists = True
+                                break
+                        if exists: continue
+                        done = True
 
-
-def do_the_thing():
-    global c1, c2, c3, c4
-    varlist = [c1.get(), c2.get(), c3.get(), c4.get()]
-    text.configure(state = NORMAL)
-    text.delete("1.0", END)
-
-    for i, c in enumerate(varlist):
-        text.insert(END, "checkbox " + str(i+1) + ": ")
-        if c == 1:
-            text.insert(END, "checked\n")
-        else:
-            text.insert(END, "not checked\n")
-    text.configure(state = DISABLED)
-    
-
-
-text_button = Button(win, text = "do the thing", command = do_the_thing)
-text_button.grid(row = 1, column = 0, pady = 7)
-
-show_settings = Button(win, text = "Show Settings", command = open_window)
-show_settings.grid(row = 2, column = 0, padx = 7)
-
-quit_button = Button(win, text = "quit", command = win.destroy)
-quit_button.grid(row = 3, column = 0, pady = 7)
-
-text = Text(state = DISABLED, height = 15, width = 400)
-text.grid(row = 0, column = 1, sticky='nsew', rowspan = 4)
-
-
-win.grid_columnconfigure(1, weight = 1)
-win.grid_rowconfigure(0, weight = 1)
-win.geometry("500x200")
-win.minsize(200,200)
-win.maxsize(500,500)
-
-win.mainloop()
+                    mission.def_num(rand_i)
+                    for c in mission.codes:
+                        codes.append(c)
+                goals.append(mission)
+            
+            goals_sort = sorted(goals, key=attrgetter('num'))
+            for n,g in enumerate(goals_sort):
+                print(short_label_list[n], ': ', g.name, sep='')
