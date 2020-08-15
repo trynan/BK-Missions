@@ -1,5 +1,4 @@
 from tkinter import *
-# testing if this pushes to github
 
 win = Tk()
 a = IntVar(value = 20)
