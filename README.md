@@ -5,7 +5,7 @@ Welcome to BK Missions! This is a program made to make generating a board of goa
 Long mission generation takes one goal from the main objective category first (randomly). Then, it chooses the next categories one by one in a random order and chooses goals that fulfill these requirements:
 - Goal does not have codes that conflict with the main objective's codes
 - Goal does not have codes that conflict with codes that have previously appeared at least twice
-Short mission generation ignores conflicting codes for the second and third goals.
+- Short mission generation ignores conflicting codes for the second and third goals.
 
 2. Configuration file
 Here is an explanation for all of the settings in the configuration file. Tweak these to your liking or change the defaults easily from within the program!
