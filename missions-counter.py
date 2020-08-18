@@ -29,6 +29,13 @@ short_label_list = [
     "2. Early Game",
     "3. Late Game"
 ]
+jinjo_list = [
+    "purple",
+    "green",
+    "blue",
+    "yellow",
+    "orange"
+]
 shortvar = int(input("0 for long, 1 for short"))
 
 long_main = [
@@ -51,11 +58,7 @@ long_side = [
     Mission(2, ["H", "A"],      "18 HCs"),
     Mission(0, ["T"],           "All 5 transformations"),
     Mission(0, [],              "All 10 Brentilda visits"),
-    Mission(0, ["O"],           "All 9 orange Jinjos"),
-    Mission(0, ["O"],           "All 9 blue Jinjos"),
-    Mission(0, ["O"],           "All 9 green Jinjos"),
-    Mission(0, ["O"],           "All 9 pink Jinjos"),
-    Mission(0, ["O"],           "All 9 yellow Jinjos"),
+    Mission(0, ["O"],           "All 9 {} Jinjos (color randomly chosen)".format(jinjo_list[random.randint(0,4)])),
     Mission(0, ["N"],           "Open the 640 note door"),
     Mission(1, ["T"],           "{} tokens [r 70-90]".format(random.randint(70,90))),
     Mission(2, ["T"],           "90 tokens"),
@@ -246,7 +249,7 @@ for blah in range(x):
                     if mission.rand == 2: continue
                     exists = False
                     for c in mission.codes:
-                        if c in codes1 or c in codes3:
+                        if c in codes3:
                             exists = True
                             break
                     if exists: continue
@@ -256,8 +259,10 @@ for blah in range(x):
                 for c in mission.codes:
                     if c in codes2:
                         codes3.append(c)
-                    else:
+                    elif c in codes1:
                         codes2.append(c)
+                    else:
+                        codes1.append(c)
             goals.append(mission)
 
         for goal in goals:
@@ -329,12 +334,14 @@ for blah in range(x):
                     done = True
 
                 mission.def_num(rand_i)
-                for c in mission.codes:
-                    codes.append(c)
+                # for c in mission.codes:
+                #     codes.append(c)
             goals.append(mission)
         
         for goal in goals:
             goal.inc_count()
+
+
 
 finalstring = ''
 with open('data.csv', 'w') as data:
