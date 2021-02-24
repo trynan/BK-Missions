@@ -18,3 +18,5 @@ Here is an explanation for all of the settings in the configuration file. Tweak 
 3. Other stuff
 - In the settings window the "get current size/position" box will write the current main window's geometry to the text box above the button. You can then use this information to set the value as a default.
 - "Apply settings" only applies font size and window size changes, it doesn't really do anything else.
+- If a custom seed is not being used, the current seed is chosen using the random library from python (random.randrange(999999)). This ends up being a pseudo-randomly chosen six-digit number.
+- If a custom seed is used, you can choose any string of digits (or even letters) and it should work (assuming I understand the random library well enough). There's probably a limit to how long the string can be but I don't know what it is.
