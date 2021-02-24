@@ -1,6 +1,7 @@
 # Original version by Trynan and Wedarobi
 # Maintained by Trynan
 # 8/11/2020
+# current: 2/24/2021
 
 from tkinter import *
 import tkinter.font as tkFont
@@ -25,17 +26,6 @@ class Mission:
         self.num = num
 
 
-show_missions_var = False
-
-def colorchange(b):
-    """ b is tk button object, function changes its background color from white->green->red->white """
-    if b.cget('bg') == "White":
-        b.config(bg = "Green", activebackground = "Green")
-    elif b.cget('bg') == "Green":
-        b.config(bg = "Red", activebackground = "Red")
-    elif b.cget('bg') == "Red":
-        b.config(bg = "White", activebackground = "White")
-
 # ------------------------------------------------
 # ----------------- WINDOW SETUP -----------------
 # ------------------------------------------------
@@ -43,13 +33,17 @@ def colorchange(b):
 # -------------------- VARIABLE SETUP --------------------
 win = Tk()
 
-short_var = IntVar() # 0 or 1
-codes_var = IntVar() # 0 or 1
-rand_var = IntVar() # 0 or 1
-win_size_var = StringVar() # format: 360x675+100+100 --> width x height + xoffset + yoffset
-show_text_var = IntVar() # 0 or 1
-font_size_var = IntVar() # positive integer
-varlist = [short_var, codes_var, rand_var, win_size_var, show_text_var, font_size_var]
+show_missions_var   = False
+short_var           = IntVar() # 0 or 1
+codes_var           = IntVar() # 0 or 1
+rand_var            = IntVar() # 0 or 1
+win_size_var        = StringVar() # format: 360x675+100+100 --> width x height + xoffset + yoffset
+show_text_var       = IntVar() # 0 or 1
+font_size_var       = IntVar() # positive integer
+seed_value          = StringVar() # six digit number
+custom_seed_value   = StringVar() # can be any string, i think
+seed_var            = IntVar() # 0 or 1
+varlist             = [short_var, codes_var, rand_var, win_size_var, show_text_var, font_size_var]
 long_label_list = [
     "1. Main Objective",
     "2. Side Quest",
@@ -136,6 +130,15 @@ for i,s in enumerate(slist):
 # ----------------------------------------------------
 # ----------------- BUTTON FUNCTIONS -----------------
 # ----------------------------------------------------
+def colorchange(b):
+    """ b is tk button object, function changes its background color from white->green->red->white """
+    if b.cget('bg') == "White":
+        b.config(bg = "Green", activebackground = "Green")
+    elif b.cget('bg') == "Green":
+        b.config(bg = "Red", activebackground = "Red")
+    elif b.cget('bg') == "Red":
+        b.config(bg = "White", activebackground = "White")
+
 def get_current_size(t):
     """ t is the text field to put the result into """
     t.delete(0, END)
@@ -206,11 +209,13 @@ def main():
     global short_var
     global show_missions_var
     global codes_var
-    if custom_seed_value.get() != '':
+    # if custom_seed_value.get() != '':
+    if seed_var.get() == 1:
         random.seed(custom_seed_value.get())
         seed_value.set(custom_seed_value.get())
+
     else:
-        random.seed()
+        random.seed() # randomize current seed based on system time
         seed_value.set(random.randrange(999999))
         random.seed(seed_value.get())
 
@@ -626,9 +631,9 @@ def main():
 # ========================================================================================================
 # ========================================================================================================
 
-# --------------------------------------------------
-# ----------------- MORE FUNCTIONS -----------------
-# --------------------------------------------------
+# --------------------------------------------------------------
+# ----------------- MORE FUNCTIONS AND BUTTONS -----------------
+# --------------------------------------------------------------
 def mission_list():
     global show_missions_var
     show_missions_var = True
@@ -638,53 +643,53 @@ def show_settings():
     settings_win = Toplevel(win)
     settings_win.title("Settings")
     settings_win.grab_set()
-    top_labelframe = LabelFrame(settings_win, text = "Missions Generation")
-    mid_labelframe = LabelFrame(settings_win, text = "Display/Window Settings")
-    bottom_labelframe = LabelFrame(settings_win, text = "Apply and Exit")
+    top_labelframe = LabelFrame(    settings_win, text = "Missions Generation")
+    mid_labelframe = LabelFrame(    settings_win, text = "Display/Window Settings")
+    bottom_labelframe = LabelFrame( settings_win, text = "Apply and Exit")
 
-    top_labelframe.pack(padx = 10, pady = 10, expand = TRUE, fill = BOTH)
-    mid_labelframe.pack(padx = 10, pady = 10, expand = TRUE, fill = BOTH)
-    bottom_labelframe.pack(padx = 10, pady = 10, expand = TRUE, fill = BOTH)
+    top_labelframe.pack(    padx = 10, pady = 10, expand = TRUE, fill = BOTH)
+    mid_labelframe.pack(    padx = 10, pady = 10, expand = TRUE, fill = BOTH)
+    bottom_labelframe.pack( padx = 10, pady = 10, expand = TRUE, fill = BOTH)
 
-    font_frame = Frame(mid_labelframe)
-    window_frame = Frame(mid_labelframe)
-    size_frame = Frame(mid_labelframe)
-    textbox_frame = Frame(mid_labelframe)
+    font_frame      = Frame(mid_labelframe)
+    window_frame    = Frame(mid_labelframe)
+    size_frame      = Frame(mid_labelframe)
+    textbox_frame   = Frame(mid_labelframe)
     cleartext_frame = Frame(mid_labelframe)
 
-    font_frame.pack(padx = 10, pady = 5)
-    window_frame.pack(padx = 10, pady = 5)
-    size_frame.pack(padx = 10, pady = 5)
-    textbox_frame.pack(padx = 10, pady = 5)
-    cleartext_frame.pack(padx = 10, pady = 5)
+    font_frame.pack(        padx = 10, pady = 5)
+    window_frame.pack(      padx = 10, pady = 5)
+    size_frame.pack(        padx = 10, pady = 5)
+    textbox_frame.pack(     padx = 10, pady = 5)
+    cleartext_frame.pack(   padx = 10, pady = 5)
     
-    short_check = Checkbutton(top_labelframe, text = "Short (if checked, short\nboard will be generated)", font = default_font, variable = short_var)
-    codes_check = Checkbutton(top_labelframe, text = "Show codes after each goal", font = default_font, variable = codes_var)
-    rand_check = Checkbutton(top_labelframe, text = "Unrandomize goals (by default,\ncertain goals are randomized)", font = default_font, variable = rand_var)
-    font_size_label = Label(font_frame, text = "Font size\n(default: 10)", font = default_font)
-    font_size = Entry(font_frame, textvariable = font_size_var, width = 8)
-    win_size_label = Label(window_frame, text = "Window size\n(default: 360x775)", font = default_font)
-    win_size = Entry(window_frame, textvariable = win_size_var, width = 18)
-    current_size = Button(size_frame, text = "Get current size/position", font = default_font, command = lambda: get_current_size(win_size))
-    remove_text = Button(textbox_frame, text = "Hide text boxes", font = default_font, command = lambda: remove_text_f(remove_text, show_text))
-    show_text = Button(textbox_frame, text = "Show text boxes", font = default_font, command = lambda: show_text_f(show_text, remove_text))
-    clear_text = Button(cleartext_frame, text = "Clear text boxes", font = default_font, command = clear_text_f)
-    apply_settings = Button(bottom_labelframe, text = "Apply settings", font = default_font, command = lambda: apply_settings_f(win_size, font_size))
-    set_default = Button(bottom_labelframe, text = "Set current values as defaults", font = default_font, command = set_default_f)
-    new_quit = Button(bottom_labelframe, text = "Exit settings", font = default_font, command = settings_win.destroy)
+    short_check         = Checkbutton(  top_labelframe,     font = default_font, text = "Short (if checked, short\nboard will be generated)", variable = short_var)
+    codes_check         = Checkbutton(  top_labelframe,     font = default_font, text = "Show codes after each goal", variable = codes_var)
+    rand_check          = Checkbutton(  top_labelframe,     font = default_font, text = "Unrandomize goals (by default,\ncertain goals are randomized)", variable = rand_var)
+    font_size_label     = Label(        font_frame,         font = default_font, text = "Font size\n(default: 10)")
+    font_size           = Entry(        font_frame,         textvariable = font_size_var, width = 8)
+    win_size_label      = Label(        window_frame,       font = default_font, text = "Window size\n(default: 360x775)")
+    win_size            = Entry(        window_frame,       textvariable = win_size_var, width = 18)
+    current_size        = Button(       size_frame,         font = default_font, text = "Get current size/position", command = lambda: get_current_size(win_size))
+    remove_text         = Button(       textbox_frame,      font = default_font, text = "Hide text boxes", command = lambda: remove_text_f(remove_text, show_text))
+    show_text           = Button(       textbox_frame,      font = default_font, text = "Show text boxes", command = lambda: show_text_f(show_text, remove_text))
+    clear_text          = Button(       cleartext_frame,    font = default_font, text = "Clear text boxes", command = clear_text_f)
+    apply_settings      = Button(       bottom_labelframe,  font = default_font, text = "Apply settings", command = lambda: apply_settings_f(win_size, font_size))
+    set_default         = Button(       bottom_labelframe,  font = default_font, text = "Set current values as defaults", command = set_default_f)
+    new_quit            = Button(       bottom_labelframe,  font = default_font, text = "Exit settings", command = settings_win.destroy)
 
-    short_check.pack(padx = 10, pady = 5)
-    codes_check.pack(padx = 10, pady = 5)
-    rand_check.pack(padx = 10, pady = 5)
+    short_check.pack(   padx = 10, pady = 5)
+    codes_check.pack(   padx = 10, pady = 5)
+    rand_check.pack(    padx = 10, pady = 5)
 
-    font_size_label.grid(row = 0, column = 0)
-    font_size.grid(row = 0, column = 1, padx = 10)
-    win_size_label.grid(row = 1, column = 0)
-    win_size.grid(row = 1, column = 1, padx = 10)
-    current_size.grid(row = 2, column = 1, padx = 10)
-    remove_text.grid(row = 3, column = 0, padx = 10)
-    show_text.grid(row = 3, column = 1, padx = 10)
-    clear_text.grid(row = 4, column = 0, columnspan = 2, padx = 10)
+    font_size_label.grid(   row = 0, column = 0)
+    font_size.grid(         row = 0, column = 1, padx = 10)
+    win_size_label.grid(    row = 1, column = 0)
+    win_size.grid(          row = 1, column = 1, padx = 10)
+    current_size.grid(      row = 2, column = 1, padx = 10)
+    remove_text.grid(       row = 3, column = 0, padx = 10)
+    show_text.grid(         row = 3, column = 1, padx = 10)
+    clear_text.grid(        row = 4, column = 0, columnspan = 2, padx = 10)
 
     apply_settings.pack(padx = 10, pady = 5)
     set_default.pack(padx = 10, pady = 5)
@@ -699,26 +704,27 @@ def show_settings():
 # ----------------- FINAL UI CONFIG -----------------
 # ---------------------------------------------------
 
-# -------------------- MAIN THREE BUTTONS --------------------
-seed_value = StringVar()
-custom_seed_value = StringVar()
-gen_missions = Button(top_frame, text = "Generate Missions", font = default_font, command = main)
-show_missions = Button(top_frame, text = "Show list of missions", font = default_font, command = mission_list)
-settings = Button(top_frame, text = "Settings", font = default_font, command = show_settings)
-other_box = Frame(top_frame)
-current_seed_box = Entry(other_box, font = default_font, textvariable = seed_value, state = DISABLED)
-current_seed_label = Label(other_box, font = default_font, text = "Current Seed:")
-custom_seed_box = Entry(other_box, font = default_font, textvariable = custom_seed_value)
-custom_seed_label = Label(other_box, font = default_font, text = "Custom Seed:")
+# -------------------- MAIN THREE BUTTONS AND SEED INPUT --------------------
+gen_missions    = Button(top_frame, font = default_font, text = "Generate Missions",     command = main)
+show_missions   = Button(top_frame, font = default_font, text = "Show list of missions", command = mission_list)
+settings        = Button(top_frame, font = default_font, text = "Settings",              command = show_settings)
+seed_frame      = Frame( top_frame)
+gen_missions.grid(  row = 0, column = 3, pady = 6)
+show_missions.grid( row = 1, column = 3, pady = 6)
+settings.grid(      row = 2, column = 3, pady = 6)
+seed_frame.grid(    row = 3, column = 3, pady = 6)
 
-gen_missions.grid(row = 0, column = 3, pady = 6)
-show_missions.grid(row = 1, column = 3, pady = 6)
-settings.grid(row = 2, column = 3, pady = 6)
-other_box.grid(row = 3, column = 3, pady = 6)
-current_seed_box.grid(row = 0, column = 1, pady = 6)
-current_seed_label.grid(row = 0, column = 0, pady = 6)
-custom_seed_box.grid(row = 1, column = 1, pady = 6)
-custom_seed_label.grid(row = 1, column = 0, pady = 6)
+
+current_seed_box    = Entry(        seed_frame, font = default_font, textvariable = seed_value, state = DISABLED)
+current_seed_label  = Label(        seed_frame, font = default_font, text = "Current Seed:")
+custom_seed_box     = Entry(        seed_frame, font = default_font, textvariable = custom_seed_value)
+custom_seed_label   = Label(        seed_frame, font = default_font, text = "Custom Seed:")
+custom_seed_check   = Checkbutton(  seed_frame, variable = seed_var)
+current_seed_box.grid(  row = 0, column = 2, pady = 6)
+current_seed_label.grid(row = 0, column = 1, pady = 6)
+custom_seed_box.grid(   row = 1, column = 2, pady = 6)
+custom_seed_label.grid( row = 1, column = 1, pady = 6)
+custom_seed_check.grid( row = 1, column = 0, pady = 6)
 
 # -------------------- WINDOW CONFIG AND LAST STEPS --------------------
 win.grid_columnconfigure(1, weight = 1)
@@ -733,7 +739,7 @@ if config['settings']['show_text'] == '0':
     win.grid_columnconfigure(0, weight=1)
     win.grid_columnconfigure(1, weight=0)
 
-win.title("BK Missions Generator v3.1.3")
+win.title("BK Missions Generator v3.2")
 win.geometry(win_size_var.get())
 win.minsize(170, 675)
 win.mainloop()
