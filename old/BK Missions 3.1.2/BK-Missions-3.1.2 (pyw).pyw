@@ -206,13 +206,6 @@ def main():
     global short_var
     global show_missions_var
     global codes_var
-    if custom_seed_value.get() != '':
-        random.seed(custom_seed_value.get())
-        seed_value.set(custom_seed_value.get())
-    else:
-        random.seed()
-        seed_value.set(random.randrange(999999))
-        random.seed(seed_value.get())
 
     for t in tlist:
         # clear text boxes
@@ -552,7 +545,7 @@ def main():
             text.config(state = DISABLED)
             show_missions_var = False
 
-# ----------------- SHORT MISSION GENERATION -----------------        
+# ----------------- LONG MISSION GENERATION -----------------        
         else:
             goals = []
             codes = []
@@ -700,25 +693,13 @@ def show_settings():
 # ---------------------------------------------------
 
 # -------------------- MAIN THREE BUTTONS --------------------
-seed_value = StringVar()
-custom_seed_value = StringVar()
 gen_missions = Button(top_frame, text = "Generate Missions", font = default_font, command = main)
 show_missions = Button(top_frame, text = "Show list of missions", font = default_font, command = mission_list)
 settings = Button(top_frame, text = "Settings", font = default_font, command = show_settings)
-other_box = Frame(top_frame)
-current_seed_box = Entry(other_box, font = default_font, textvariable = seed_value, state = DISABLED)
-current_seed_label = Label(other_box, font = default_font, text = "Current Seed:")
-custom_seed_box = Entry(other_box, font = default_font, textvariable = custom_seed_value)
-custom_seed_label = Label(other_box, font = default_font, text = "Custom Seed:")
 
 gen_missions.grid(row = 0, column = 3, pady = 6)
 show_missions.grid(row = 1, column = 3, pady = 6)
 settings.grid(row = 2, column = 3, pady = 6)
-other_box.grid(row = 3, column = 3, pady = 6)
-current_seed_box.grid(row = 0, column = 1, pady = 6)
-current_seed_label.grid(row = 0, column = 0, pady = 6)
-custom_seed_box.grid(row = 1, column = 1, pady = 6)
-custom_seed_label.grid(row = 1, column = 0, pady = 6)
 
 # -------------------- WINDOW CONFIG AND LAST STEPS --------------------
 win.grid_columnconfigure(1, weight = 1)
