@@ -733,7 +733,7 @@ if config['settings']['show_text'] == '0':
     win.grid_columnconfigure(0, weight=1)
     win.grid_columnconfigure(1, weight=0)
 
-win.title("BK Missions Generator v3.1.2")
+win.title("BK Missions Generator v3.1.3")
 win.geometry(win_size_var.get())
 win.minsize(170, 675)
 win.mainloop()
