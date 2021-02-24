@@ -1,6 +1,7 @@
 # Original version by Trynan and Wedarobi
 # Maintained by Trynan
 # 8/11/2020
+# current: 2/24/2021
 
 from tkinter import *
 import tkinter.font as tkFont
