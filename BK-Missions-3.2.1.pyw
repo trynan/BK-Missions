@@ -213,10 +213,11 @@ def main():
     if seed_var.get() == 1:
         random.seed(custom_seed_value.get())
         seed_value.set(custom_seed_value.get())
-
     else:
         random.seed() # randomize current seed based on system time
-        seed_value.set(random.randrange(999999))
+        rn = random.randrange(999999)
+        seed_value.set(rn)
+        custom_seed_value.set(rn)
         random.seed(seed_value.get())
 
     for t in tlist:
@@ -432,6 +433,7 @@ def main():
 
 # ----------------- LONG MISSION GENERATION -----------------
         else:
+            # random.seed(seed_value.get()) # allows unrandomized and randomized goals to be (almost) the same
             b4.config(state = NORMAL)
             b5.config(state = NORMAL)
             goals = []
@@ -699,6 +701,11 @@ def show_settings():
         remove_text.config(state = DISABLED)
     else:
         show_text.config(state = DISABLED)
+def copy():
+    win.clipboard_clear()
+    txt_to_copy = seed_value.get()
+    if txt_to_copy != '':
+        win.clipboard_append(txt_to_copy)
 
 # ---------------------------------------------------
 # ----------------- FINAL UI CONFIG -----------------
@@ -717,11 +724,13 @@ seed_frame.grid(    row = 3, column = 3, pady = 6)
 
 current_seed_box    = Entry(        seed_frame, font = default_font, textvariable = seed_value, state = DISABLED)
 current_seed_label  = Label(        seed_frame, font = default_font, text = "Current Seed:")
+current_seed_copy   = Button(       seed_frame, font = default_font, text = "Copy", command = copy)
 custom_seed_box     = Entry(        seed_frame, font = default_font, textvariable = custom_seed_value)
 custom_seed_label   = Label(        seed_frame, font = default_font, text = "Custom Seed:")
 custom_seed_check   = Checkbutton(  seed_frame, variable = seed_var)
 current_seed_box.grid(  row = 0, column = 2, pady = 6)
 current_seed_label.grid(row = 0, column = 1, pady = 6)
+current_seed_copy.grid( row = 0, column = 0, pady = 6)
 custom_seed_box.grid(   row = 1, column = 2, pady = 6)
 custom_seed_label.grid( row = 1, column = 1, pady = 6)
 custom_seed_check.grid( row = 1, column = 0, pady = 6)
@@ -739,7 +748,7 @@ if config['settings']['show_text'] == '0':
     win.grid_columnconfigure(0, weight=1)
     win.grid_columnconfigure(1, weight=0)
 
-win.title("BK Missions Generator v3.2")
+win.title("BK Missions Generator v3.2.1")
 win.geometry(win_size_var.get())
 win.minsize(170, 675)
 win.mainloop()
