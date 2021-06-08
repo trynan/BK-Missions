@@ -4,17 +4,42 @@
 # current: 2/24/2021
 
 from tkinter import *
+from tkinter import messagebox
 import tkinter.font as tkFont
 import tkinter.ttk as ttk
 from operator import attrgetter
 import random
 import configparser
 
-config = configparser.ConfigParser()
-config.read('bk_config.ini')
-default_vals_list = []
-for key in config['settings']:
-    default_vals_list.append(config['settings'][key])
+def show_exception_and_exit(exc_type, exc_value, tb):
+    import traceback
+    traceback.print_exception(exc_type, exc_value, tb)
+    input("press key to exit. ")
+    sys.exit(-1)
+import sys
+sys.excepthook = show_exception_and_exit
+
+config_error = False
+try:
+    config = configparser.ConfigParser()
+    config.read('bk_config.ini')
+    default_vals_list = []
+    for key in config['settings']:
+        default_vals_list.append(config['settings'][key])
+except:
+    config_error = True
+    default_vals_list = []
+    config = {
+        'short':'0',
+        'show_codes':'0',
+        'unrandomize':'0',
+        'win_size':'360x775+148+156',
+        'show_text':'1',
+        'font_size':'10'
+    }
+    for key in config:
+        default_vals_list.append(config[key])
+
 
 class Mission:
     def __init__(self, rand, codes, name):
@@ -195,6 +220,7 @@ def apply_settings_f(t1, t2):
             b.config(wraplength = 165)
 
 def set_default_f():
+    if config_error: return
     for i,key in enumerate(config['settings']):
         config.set('settings', key, str(varlist[i].get())) # since it's .get() you don't have to directly update varlist
     with open('bk_config.ini', 'w') as configfile:
@@ -740,7 +766,7 @@ win.grid_columnconfigure(1, weight = 1)
 for i in range(5, 10):
     win.grid_rowconfigure(i, weight = 1)
 
-if config['settings']['show_text'] == '0':
+if not config_error and config['settings']['show_text'] == '0':
     for t in tlist:
         t.grid_forget()
     for s in slist:
@@ -750,5 +776,6 @@ if config['settings']['show_text'] == '0':
 
 win.title("BK Missions Generator v3.2.1")
 win.geometry(win_size_var.get())
-win.minsize(170, 675)
+win.minsize(300, 675)
+if config_error: messagebox.showerror('Config Missing!', "Oops! I couldn't find your configuration file (bk_config.ini). Make sure it's in this folder and you didn't change its name. In the meantime, you can continue but you won't be able to change default values.")
 win.mainloop()
