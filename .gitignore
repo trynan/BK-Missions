@@ -1,0 +1,6 @@
+testing/
+old/
+*.csv
+*.xlsx
+gen-backup.py
+missions-counter.py

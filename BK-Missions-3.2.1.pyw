@@ -26,7 +26,7 @@ try:
     default_vals_list = []
     for key in config['settings']:
         default_vals_list.append(config['settings'][key])
-except:
+except: # this shouldn't ever error but it does for some people i guess? haven't figured that one out yet
     config_error = True
     default_vals_list = []
     config = {
