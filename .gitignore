@@ -2,5 +2,8 @@ testing/
 old/
 *.csv
 *.xlsx
+*.exe
+*.zip
+*.ico
 gen-backup.py
 missions-counter.py

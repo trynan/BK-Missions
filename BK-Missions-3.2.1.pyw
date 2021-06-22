@@ -1,7 +1,7 @@
 # Original version by Trynan and Wedarobi
 # Maintained by Trynan
 # 8/11/2020
-# current: 2/24/2021
+# current: 6/21/2021
 
 from tkinter import *
 from tkinter import messagebox
