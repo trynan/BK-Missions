@@ -1,5 +1,5 @@
 # BK-Missions
-Welcome to BK Missions! This is a program made to make generating a board of goals simple and easy. In this readme I'll talk about how some of it works and some of the details.
+Welcome to BK Missions! This is a program made to make generating a board of goals simple and easy. In this readme I'll talk about how some of it works and some of the details. BK Missions was an idea by CrozB. He came up with the logic for generating a set of goals, and also the goals themselves.
 
 1. How does long mission generation works?
 Long mission generation takes one goal from the main objective category first (randomly). Then, it chooses the next categories one by one in a random order and chooses goals that fulfill these requirements:
