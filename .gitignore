@@ -6,5 +6,8 @@ old/
 *.zip
 *.ico
 *.log
+*.xml
+*.iml
+.idea/
 gen-backup.py
 missions-counter.py
