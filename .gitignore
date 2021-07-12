@@ -1,5 +1,6 @@
 testing/
 old/
+__pycache__/
 *.csv
 *.xlsx
 *.exe
