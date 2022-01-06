@@ -5,7 +5,6 @@ __pycache__/
 *.xlsx
 *.exe
 *.zip
-*.ico
 *.log
 *.xml
 *.iml
