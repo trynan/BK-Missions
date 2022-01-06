@@ -1,6 +1,7 @@
 testing/
 old/
 __pycache__/
+.missions-venv/
 *.csv
 *.xlsx
 *.exe
