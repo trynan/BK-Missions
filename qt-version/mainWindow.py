@@ -1,66 +1,27 @@
-# Original version by Trynan and Wedarobi
-# Maintained by Trynan
-# BK Missions idea by CrozB
-# Mission generation logic and missions by CrozB
-# 8/11/2020 - 1/5/2022
-
 from PySide6 import QtWidgets, QtGui, QtCore
 import sys
+import richButton
 
 ## the structure is something like this:
-# top buttons (encased in topBox)
+# top buttons and settings (encased in topBox)
 # seed stuff (encased in seedBox)
-# bottom five buttons are encased in buttonBox
-# bottom five text boxes are encased in textBox
-# those boxes are encased together in bottomBox
-
-
-# button with rich text (used here for multiline text)
-# https://stackoverflow.com/questions/8960233/subclassing-qlabel-to-show-native-mouse-hover-button-indicator/8960548#8960548
-class richButton(QtWidgets.QPushButton):
-    def __init__(self, text):
-        super().__init__()
-        self.bigFnt = QtGui.QFont()
-        self.bigFnt.setPointSize(12)
-
-        self.text = QtWidgets.QLabel(text)
-        self.text.setFont(self.bigFnt)
-        self.text.setAlignment(QtCore.Qt.AlignCenter)
-        # self.text.setTextInteractionFlags(QtCore.Qt.NoTextInteraction)
-        # self.text.setMouseTracking(False)
-        self.text.setWordWrap(True)
-        self.lay = QtWidgets.QVBoxLayout()
-        # self.lay.setContentsMargins(0, 0, 0, 0)
-        self.lay.addWidget(self.text)
-        self.setLayout(self.lay)
-        # make the button big enough to fit the text
-        self.setSizePolicy(QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum))
-    
-    def setText(self, text):
-        self.text.setText(text)
-
-class listWindow(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-        self.setMinimumWidth(500)
-        self.setMinimumHeight(500)
-        self.setWindowTitle("List of Missions")
-        self.mainLayout = QtWidgets.QVBoxLayout(self)
-        self.text = QtWidgets.QTextEdit()
-        self.text.setReadOnly(True)
-        self.mainLayout.addWidget(self.text)
+# bottom five buttons (encased in bottomBox)
 
 # the secret to using groupboxes is you just make everything as normal (with boxlayouts),
 # and then with the groupbox you make it, set its layout to the layout
 # you want to be surrounded by the box, and then instead of adding the
 # layout to the main layout, you add the group box instead.
+
+# the advantage to groupboxes is that they're like layouts that
+# act more like widgets. otherwise they don't really do anything.
+# so far these ones are not doing anything.
 class bkWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BK Missions")
+        self.setWindowIcon(QtGui.QIcon("kazooie.ico"))
         self.setMinimumHeight(550)
-        self.smallFnt = QtGui.QFont()
-        self.smallFnt.setPointSize(14)
+        self.clip = QtGui.QClipboard()
 
         self.mainLayout = QtWidgets.QVBoxLayout(self)
         # don't stretch horizontally
@@ -72,24 +33,31 @@ class bkWindow(QtWidgets.QWidget):
 
 
         ##
-        # top buttons
+        # top buttons and settings
         self.topLayout = QtWidgets.QVBoxLayout()
         self.topLayout.setContentsMargins(0, 0, 0, 0)  # to remove margins added by QFrame
         self.topBox = QtWidgets.QFrame()
         self.topBox.setLayout(self.topLayout)
         self.topBox.setSizePolicy(self.maxVPolicy)
+        self.settingsLayout = QtWidgets.QHBoxLayout()
 
         self.genMissionsBtn = QtWidgets.QPushButton("Generate Missions")
         self.listMissionsBtn = QtWidgets.QPushButton("Show List of Missions")
-        self.settingsBtn = QtWidgets.QPushButton("Settings")
+
+        self.shortCheck = QtWidgets.QCheckBox("Short")
+        self.randCheck = QtWidgets.QCheckBox("Randomize")
+        self.codesCheck = QtWidgets.QCheckBox("Show Codes")
 
         self.genMissionsBtn.clicked.connect(self.generateMissions)
         self.listMissionsBtn.clicked.connect(self.listMissions)
-        self.settingsBtn.clicked.connect(self.showSettings)
+        self.randCheck.setChecked(True)
 
+        self.settingsLayout.addWidget(self.shortCheck)
+        self.settingsLayout.addWidget(self.randCheck)
+        self.settingsLayout.addWidget(self.codesCheck)
         self.topLayout.addWidget(self.genMissionsBtn)
         self.topLayout.addWidget(self.listMissionsBtn)
-        self.topLayout.addWidget(self.settingsBtn)
+        self.topLayout.addLayout(self.settingsLayout)
 
 
         ##
@@ -108,9 +76,9 @@ class bkWindow(QtWidgets.QWidget):
         self.customSeedBox = QtWidgets.QLineEdit()
 
         self.customSeedBox.setEnabled(False)
-        self.currentSeedBox.setEnabled(False)
-        self.useSeedCheck.stateChanged.connect(self.enableCustomSeed)
-        self.copySeedBtn.clicked.connect(self.copySeed)
+        self.currentSeedBox.setReadOnly(True)
+        self.useSeedCheck.stateChanged.connect(lambda: self.customSeedBox.setEnabled(not self.customSeedBox.isEnabled()))
+        self.copySeedBtn.clicked.connect(lambda: self.clip.setText(self.currentSeedBox.text()))
 
         self.seedGrid.addWidget(self.copySeedBtn, 0, 0)
         self.seedGrid.addWidget(self.currentSeedLabel, 0, 1)
@@ -122,33 +90,17 @@ class bkWindow(QtWidgets.QWidget):
 
         ##
         # buttons and text boxes
-        self.bottomLayout = QtWidgets.QHBoxLayout()
-        self.buttonLayout = QtWidgets.QVBoxLayout()
-        self.textLayout = QtWidgets.QVBoxLayout()
+        self.bottomLayout = QtWidgets.QVBoxLayout()
         self.bottomLayout.setContentsMargins(0, 0, 0, 0)
-        self.buttonLayout.setContentsMargins(0, 0, 0, 0)
-        self.textLayout.setContentsMargins(0, 0, 0, 0)
         self.bottomBox = QtWidgets.QFrame()
-        self.buttonBox = QtWidgets.QFrame()
-        self.textBox = QtWidgets.QFrame()
-        self.textBox.hide()
         self.bottomBox.setLayout(self.bottomLayout)
-        self.buttonBox.setLayout(self.buttonLayout)
-        self.textBox.setLayout(self.textLayout)
 
-        self.b1 = richButton("First Goal")
-        self.b2 = richButton("Second Goal")
-        self.b3 = richButton("Third Goal")
-        self.b4 = richButton("Fourth Goal")
-        self.b5 = richButton("Fifth Goal")
+        self.b1 = richButton.richButton("First Goal")
+        self.b2 = richButton.richButton("Second Goal")
+        self.b3 = richButton.richButton("Third Goal")
+        self.b4 = richButton.richButton("Fourth Goal")
+        self.b5 = richButton.richButton("Fifth Goal")
         self.buttons = [self.b1, self.b2, self.b3, self.b4, self.b5]
-
-        self.t1 = QtWidgets.QTextEdit()
-        self.t2 = QtWidgets.QTextEdit()
-        self.t3 = QtWidgets.QTextEdit()
-        self.t4 = QtWidgets.QTextEdit()
-        self.t5 = QtWidgets.QTextEdit()
-        self.text = [self.t1, self.t2, self.t3, self.t4, self.t5]
 
 
         # connect these explicitly because the lambda
@@ -159,16 +111,11 @@ class bkWindow(QtWidgets.QWidget):
         self.b4.clicked.connect(lambda: self.changeColor(self.b4))
         self.b5.clicked.connect(lambda: self.changeColor(self.b5))
         for i in range(5):
-            # self.buttons[i].setSizePolicy(self.minPolicy)
-            # self.text[i].setSizePolicy(self.maxVPolicy)
-            self.buttonLayout.addWidget(self.buttons[i])
-            self.textLayout.addWidget(self.text[i])
-
-        self.bottomLayout.addWidget(self.buttonBox)
-        self.bottomLayout.addWidget(self.textBox)
-        
+            self.bottomLayout.addWidget(self.buttons[i])
 
 
+        ##
+        # connect everything up to main
         self.mainLayout.addWidget(self.topBox)
         self.mainLayout.addWidget(self.seedBox)
         self.mainLayout.addWidget(self.bottomBox)
@@ -180,15 +127,6 @@ class bkWindow(QtWidgets.QWidget):
     
     def listMissions(self):
         print('list')
-
-    def showSettings(self):
-        print('settings')
-
-    def copySeed(self):
-        print('copy')
-    
-    def enableCustomSeed(self):
-        print("enable custom seed")
 
     def changeColor(self, b):
         print("change color")

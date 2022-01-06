@@ -10,7 +10,7 @@ class Mission:
         self.name = name  # name of goal (string), i.e. "Open 765 note door"
 
 
-def getRandI(length, i_list):
+def getRand_i(length, i_list):
     """
     Gets a random i based on length which isn't in i_list.
     - length is an integer for how many i's there will be.
@@ -100,7 +100,7 @@ def generateGoals(missions, short, randomize):
             mission = randomMission(missions[i], codes3, randomize)
         else:
             # after i = 0 do them randomly
-            rand_i = getRandI(len(missions), i_list)
+            rand_i = getRand_i(len(missions), i_list)
             mission = randomMission(missions[rand_i], codes3, randomize)
 
         mission.num = rand_i

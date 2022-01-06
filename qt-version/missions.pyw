@@ -8,20 +8,20 @@
 from PySide6 import QtWidgets, QtGui, QtCore
 import sys
 import random
-import qtWindow
+
+import mainWindow
+import listWindow
 import generation
 
-class missionsWin(qtWindow.bkWindow):
+class missionsWin(mainWindow.bkWindow):
     def __init__(self):
         super().__init__()
-        self.clip = QtGui.QClipboard()
         self.listWin = None
-        self.short = False
-        self.randomize = True
-        self.showCodes = False
         self.seedValue = "0"
 
 
+    ###
+    # helper functions
     def getSeed(self):
         """ returns seed (either custom or new random one) """
         if self.useSeedCheck.isChecked():  # use custom seed
@@ -44,7 +44,7 @@ class missionsWin(qtWindow.bkWindow):
         longSide = generation.getLongSide()
         shortMain = generation.getShortMain()
         levels = generation.getLevels()
-        if not self.short:
+        if not self.shortCheck.isChecked():
             missions = [
                 [longMain],  # main objective
                 [longSide],  # side quest
@@ -84,6 +84,8 @@ class missionsWin(qtWindow.bkWindow):
         return missions
 
 
+    ###
+    # button-activated functions
     def generateMissions(self):
         # return current button backgrounds to default
         for b in self.buttons:
@@ -92,7 +94,7 @@ class missionsWin(qtWindow.bkWindow):
         random.seed(self.getSeed())
         # get lists of missions (done every time for random results)
         missions = self.getMissionsLists()
-        if self.short:
+        if self.shortCheck.isChecked():
             self.b4.setText("-----")
             self.b5.setText("-----")
             self.b4.setEnabled(False)
@@ -100,20 +102,18 @@ class missionsWin(qtWindow.bkWindow):
         else:
             self.b4.setEnabled(True)
             self.b5.setEnabled(True)
-        goals = generation.generateGoals(missions, self.short, not self.randomize)
+        goals = generation.generateGoals(missions, self.shortCheck.isChecked(), not self.randCheck.isChecked())
         for m,b in zip(goals, self.buttons):
-            if self.showCodes:
+            if self.codesCheck.isChecked():
                 b.setText(m.name + ' -- ' + ', '.join(m.codes))
             else:
                 b.setText(m.name)
 
 
     def listMissions(self):
-        if self.listWin == None:
-            self.listWin = qtWindow.listWindow()
-        else:
+        if self.listWin != None:
             self.listWin.close()
-            self.listWin = qtWindow.listWindow()
+        self.listWin = listWindow.listWindow()
         self.listWin.show()
         random.seed(self.getSeed())
         missions = self.getMissionsLists()
@@ -130,38 +130,27 @@ class missionsWin(qtWindow.bkWindow):
             "3. Late Game"
         ]
         labelList = [longLabels, shortLabels]
-        if self.short:
+        if self.shortCheck.isChecked():
             self.listWin.text.insertPlainText("LIST OF SHORT MISSIONS:\n\n")
         else:
             self.listWin.text.insertPlainText("LIST OF LONG MISSIONS:\n\n")
-
         for labelNum, category in enumerate(missions):
-            self.listWin.text.insertPlainText(labelList[int(self.short)][labelNum] + '\n')
+            self.listWin.text.insertPlainText(labelList[int(self.shortCheck.isChecked())][labelNum] + '\n')
             for lst in category:  # category is a list of lists
                 for goal in lst:  # go through each goal in the sub-lists
-                    if not self.randomize:
+                    if not self.randCheck.isChecked():
                         if goal.rand == 1:
                             continue  # don't use random goals
                     else:
                         if goal.rand == 2:
                             continue  # don't use nonrandom variants of random goals
                     self.listWin.text.insertPlainText('- ' + goal.name)
-                    if self.showCodes:
+                    if self.codesCheck.isChecked():
                         self.listWin.text.insertPlainText(' -- ' + ', '.join(goal.codes))
                     self.listWin.text.insertPlainText('\n')
                 # end of category
                 self.listWin.text.insertPlainText('\n')
 
-
-    def showSettings(self):
-        print('settings')
-
-    def copySeed(self):
-        self.clip.setText(self.currentSeedBox.text())
-
-    def enableCustomSeed(self):
-        enabled = self.customSeedBox.isEnabled()
-        self.customSeedBox.setEnabled(not enabled)
 
     def changeColor(self, b):
         style = b.styleSheet()
