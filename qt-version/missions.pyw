@@ -2,7 +2,7 @@
 # Maintained by Trynan
 # BK Missions idea by CrozB
 # Mission generation logic and missions by CrozB
-# 8/11/2020 - 1/5/2022
+# 8/11/2020 - 1/6/2022
 
 
 from PySide6 import QtWidgets, QtGui, QtCore

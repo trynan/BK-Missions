@@ -3,7 +3,7 @@
 # BK Missions idea by CrozB
 # Mission generation logic and the missions themselves were come up with by CrozB
 # 8/11/2020
-# current: 6/23/2021
+# current: 1/06/2022
 
 import tkinter as tk
 from tkinter import messagebox
@@ -481,7 +481,7 @@ for i in range(5, 10):
 if not CONFIG_ERROR and CONFIG['settings']['show_text'] == '0':
     toggle_text_boxes()
 
-win.title("BK Missions Generator v3.3")
+win.title("BK Missions Generator")
 win.geometry(WIN_SIZE.get())
 win.minsize(300, 675)
 if CONFIG_ERROR:
