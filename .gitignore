@@ -9,6 +9,7 @@ __pycache__/
 *.log
 *.xml
 *.iml
+*.spec
 .idea/
 gen-backup.py
 missions-counter.py

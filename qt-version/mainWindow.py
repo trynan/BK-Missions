@@ -1,5 +1,6 @@
 from PySide6 import QtWidgets, QtGui, QtCore
 import sys
+from os import path
 import richButton
 
 ## the structure is something like this:
@@ -19,7 +20,11 @@ class bkWindow(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("BK Missions")
-        self.setWindowIcon(QtGui.QIcon("kazooie.ico"))
+        # make the icon show up when using pyinstaller to turn it into a .exe
+        # https://pyinstaller.readthedocs.io/en/stable/spec-files.html#adding-data-files
+        # https://pyinstaller.readthedocs.io/en/stable/runtime-information.html#run-time-information
+        icon = path.abspath(path.join(path.dirname(__file__), 'kazooie.ico'))
+        self.setWindowIcon(QtGui.QIcon(icon))
         self.setMinimumHeight(550)
         self.clip = QtGui.QClipboard()
 
